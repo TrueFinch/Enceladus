@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Enceladus</string>
+    <string name="title_week">Week</string>
+    <string name="title_month">Month</string>
+    <string name="title_day">Day</string>
+    <string name="title_schedule">Schedule</string>
 </resources>
