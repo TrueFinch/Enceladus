@@ -2,6 +2,7 @@ package com.truefinch.enceladus.ui.month
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import com.truefinch.enceladus.R
-
 
 class MonthFragment : Fragment() {
 
@@ -33,6 +33,15 @@ class MonthFragment : Fragment() {
         return root
     }
 
+//    override fun onActivityCreated(savedInstanceState: Bundle?) {
+//        super.onActivityCreated(savedInstanceState)
+//        Log.i("save_state","month fragment state restored")
+//    }
+//
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        Log.i("save_state","month fragment state saved")
+//    }
 //    override fun onActivityCreated(savedInstanceState: Bundle?) {
 //        super.onActivityCreated(savedInstanceState)
 //        viewModel = ViewModelProviders.of(this).get(MonthViewModel::class.java)

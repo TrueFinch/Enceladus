@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.findNavController
 import com.truefinch.enceladus.R
 
@@ -49,7 +48,7 @@ class SplashFragment : Fragment() {
             context?.let {
                 findNavController().navigate(R.id.action_splashFragment_to_authFragment)
             }
-        }, 2500)
+        }, 1000)
 
     }
 }

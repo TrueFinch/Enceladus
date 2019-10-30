@@ -5,6 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class AuthViewModel : ViewModel() {
+    val check = MutableLiveData<Boolean>()
+
+    fun setCheck(value: Boolean) {
+        check.value = value
+    }
+
     private val _text = MutableLiveData<String>().apply {
         value = "This is auth Fragment"
     }
