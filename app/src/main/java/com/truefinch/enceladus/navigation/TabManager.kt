@@ -44,46 +44,30 @@ class TabManager(private val mainActivity: MainActivity) {
     private val _navStartController: NavController by lazy {
         mainActivity.findNavController(R.id.start_tab).apply {
             graph = navInflater.inflate(R.navigation.navigation_graph_start)
-//                .apply {
-//                startDestination = startDestinations.getValue(R.id.splashFragment)
-//
-//            }
         }
     }
 
     private val _navMonthController: NavController by lazy {
         mainActivity.findNavController(R.id.month_tab).apply {
             graph = navInflater.inflate(R.navigation.navigation_graph_month)
-//                .apply {
-//                startDestination = startDestinations.getValue(R.id.navigation_month)
-//            }
         }
     }
 
     private val _navWeekController: NavController by lazy {
         mainActivity.findNavController(R.id.week_tab).apply {
             graph = navInflater.inflate(R.navigation.navigation_graph_week)
-//                .apply {
-//                startDestination = startDestinations.getValue(R.id.navigation_week)
-//            }
         }
     }
 
     private val _navDayController: NavController by lazy {
         mainActivity.findNavController(R.id.day_tab).apply {
             graph = navInflater.inflate(R.navigation.navigation_graph_day)
-//                .apply {
-//                startDestination = startDestinations.getValue(R.id.navigation_day)
-//            }
         }
     }
 
     private val _navScheduleController: NavController by lazy {
         mainActivity.findNavController(R.id.schedule_tab).apply {
             graph = navInflater.inflate(R.navigation.navigation_graph_schedule)
-//                .apply {
-//                startDestination = startDestinations.getValue(R.id.navigation_schedule)
-//            }
         }
     }
 
@@ -129,6 +113,9 @@ class TabManager(private val mainActivity: MainActivity) {
     }
 
     fun switchTab(tabId: Int, addToTabHistory: Boolean = true) {
+        if (addToTabHistory && currentTabId != R.id.navigation_start) {
+            tabHistory.push(tabId)
+        }
         currentTabId = tabId
         when (tabId) {
             R.id.navigation_start -> {
@@ -151,10 +138,6 @@ class TabManager(private val mainActivity: MainActivity) {
                 currentNavController = _navScheduleController
                 invisibleTabContainerExcept(scheduleTabContainer)
             }
-        }
-
-        if (addToTabHistory) {
-            tabHistory.push(tabId)
         }
     }
 

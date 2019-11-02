@@ -49,7 +49,6 @@ class AuthFragment : Fragment() {
         Handler().postDelayed({
             context?.let {
                 viewModel.setCheck(true)
-                val v = viewModel.check.value
             }
         }, 0)
 

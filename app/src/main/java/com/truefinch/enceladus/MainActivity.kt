@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(this)
-
+        supportActionBar?.hide()
         if (savedInstanceState == null) {
             navView.selectedItemId = R.id.navigation_start
             navView.visibility = View.GONE
