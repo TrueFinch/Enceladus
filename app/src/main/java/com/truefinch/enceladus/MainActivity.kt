@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             navView.selectedItemId = R.id.navigation_start
             navView.visibility = View.GONE
 
+            //maybe this should be done in some other way
             val authViewModel = ViewModelProviders.of(this).get(AuthViewModel::class.java)
             authViewModel.check.observe(this, Observer<Boolean> {
                 //                tabManager.switchTab(R.id.navigation_month, false)
