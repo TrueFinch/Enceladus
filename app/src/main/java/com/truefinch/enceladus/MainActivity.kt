@@ -18,11 +18,12 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(this)
         supportActionBar?.hide()
         if (savedInstanceState == null) {
-            navView.selectedItemId = R.id.navigation_start
+//            navView.selectedItemId = R.id.navigation_start
             navView.visibility = View.GONE
 
             //maybe this should be done in some other way

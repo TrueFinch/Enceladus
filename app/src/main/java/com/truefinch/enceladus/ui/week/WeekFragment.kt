@@ -64,8 +64,6 @@ class WeekFragment : Fragment() {
                 return "%s\n%s".format(weekday.toUpperCase(), format.format(date.time))
             }
         }
-//        viewModel = ViewModelProviders.of(this).get(WeekViewModel::class.java)
-//        // TODO: Use the ViewModel
     }
 
 }

@@ -15,9 +15,9 @@ class WeekViewModel : ViewModel() {
 //        events.value = database.getEventsInRange(startDate.toCalendar(), endDate.toCalendar())
 //    }
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is week Fragment"
-    }
-    val text: LiveData<String> = _text
+//    private val _text = MutableLiveData<String>().apply {
+//        value = "This is week Fragment"
+//    }
+//    val text: LiveData<String> = _text
     // TODO: Implement the ViewModel
 }

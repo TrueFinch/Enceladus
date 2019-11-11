@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isInvisible
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import com.truefinch.enceladus.MainActivity
 import com.truefinch.enceladus.R
@@ -18,6 +17,9 @@ class TabManager(private val mainActivity: MainActivity) {
 
     val navMonthController: NavController
         get() = _navMonthController
+
+    val navNewEventController: NavController
+        get() = _navNewEventController
 
     val navWeekController: NavController
         get() = _navWeekController
@@ -32,9 +34,10 @@ class TabManager(private val mainActivity: MainActivity) {
 
 
     private val startDestinations = mapOf(
-        R.id.navigation_start to R.id.splashFragment,
+//        R.id.navigation_start to R.id.splashFragment,
         R.id.navigation_month to R.id.monthFragment,
         R.id.navigation_week to R.id.weekFragment,
+        R.id.navigation_new_event to R.id.eventFragment,
         R.id.navigation_day to R.id.dayFragment,
         R.id.navigation_schedule to R.id.scheduleFragment
     )
@@ -59,6 +62,12 @@ class TabManager(private val mainActivity: MainActivity) {
         }
     }
 
+    private val _navNewEventController: NavController by lazy {
+        mainActivity.findNavController(R.id.event_edit_tab).apply {
+            graph = navInflater.inflate(R.navigation.navigation_graph_new_event)
+        }
+    }
+
     private val _navDayController: NavController by lazy {
         mainActivity.findNavController(R.id.day_tab).apply {
             graph = navInflater.inflate(R.navigation.navigation_graph_day)
@@ -74,6 +83,7 @@ class TabManager(private val mainActivity: MainActivity) {
     private val startTabContainer: View by lazy { mainActivity.start_tab_container }
     private val monthTabContainer: View by lazy { mainActivity.month_tab_container }
     private val weekTabContainer: View by lazy { mainActivity.week_tab_container }
+    private val newEventTabContainer: View by lazy { mainActivity.new_event_tab_container }
     private val dayTabContainer: View by lazy { mainActivity.day_tab_container }
     private val scheduleTabContainer: View by lazy { mainActivity.schedule_tab_container }
 
@@ -113,15 +123,16 @@ class TabManager(private val mainActivity: MainActivity) {
     }
 
     fun switchTab(tabId: Int, addToTabHistory: Boolean = true) {
-        if (addToTabHistory && currentTabId != R.id.navigation_start) {
+        if (addToTabHistory/* && currentTabId != R.id.navigation_start*/) {
             tabHistory.push(tabId)
         }
         currentTabId = tabId
         when (tabId) {
-            R.id.navigation_start -> {
-                currentNavController = _navStartController
-                invisibleTabContainerExcept(startTabContainer)
-            }
+            //TODO: maybe we want user to be able to auth during runtime, so we need to provide a way to do this
+//            R.id.navigation_start -> {
+//                currentNavController = _navStartController
+//                invisibleTabContainerExcept(startTabContainer)
+//            }
             R.id.navigation_month -> {
                 currentNavController = _navMonthController
                 invisibleTabContainerExcept(monthTabContainer)
@@ -129,6 +140,10 @@ class TabManager(private val mainActivity: MainActivity) {
             R.id.navigation_week -> {
                 currentNavController = _navWeekController
                 invisibleTabContainerExcept(weekTabContainer)
+            }
+            R.id.navigation_new_event -> {
+                currentNavController = _navNewEventController
+                invisibleTabContainerExcept(newEventTabContainer)
             }
             R.id.navigation_day -> {
                 currentNavController = _navDayController
@@ -145,6 +160,7 @@ class TabManager(private val mainActivity: MainActivity) {
         startTabContainer.isInvisible = true
         monthTabContainer.isInvisible = true
         weekTabContainer.isInvisible = true
+        newEventTabContainer.isInvisible = true
         dayTabContainer.isInvisible = true
         scheduleTabContainer.isInvisible = true
 
