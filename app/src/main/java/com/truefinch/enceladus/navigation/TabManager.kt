@@ -63,7 +63,7 @@ class TabManager(private val mainActivity: MainActivity) {
     }
 
     private val _navNewEventController: NavController by lazy {
-        mainActivity.findNavController(R.id.event_edit_tab).apply {
+        mainActivity.findNavController(R.id.new_event_tab).apply {
             graph = navInflater.inflate(R.navigation.navigation_graph_new_event)
         }
     }

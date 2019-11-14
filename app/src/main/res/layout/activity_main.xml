@@ -54,6 +54,21 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/new_event_tab_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/nav_view"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <fragment
+            android:id="@+id/new_event_tab"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:defaultNavHost="false" />
+    </FrameLayout>
+
+    <FrameLayout
         android:id="@+id/day_tab_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
