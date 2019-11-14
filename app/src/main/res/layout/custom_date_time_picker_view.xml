@@ -3,47 +3,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/date_time_label"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_weight="1"
+        android:orientation="horizontal">
 
-        android:gravity="center"
-        android:text="@string/date_time_label"
-        android:textColor="@android:color/black"
-        android:textAlignment="center"
-        android:textSize="18sp" />
+        <TextView
+            android:id="@+id/date_time_label"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="test"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
 
-    <Space
-        android:layout_width="0dp"
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <EditText
+            android:id="@+id/date_time_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:gravity="end|bottom"
+            android:inputType="datetime"
+            android:textSize="14sp"
+            tools:text="kek_hour" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_gravity="end"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/etHour"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:cursorVisible="false"
-        android:focusable="false"
-        android:gravity="end"
-        android:inputType="date"
-        tools:text="kek_hour" />
-
-    <EditText
-        android:id="@+id/etDay"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:cursorVisible="false"
-        android:focusable="false"
-
-        android:gravity="end"
-        android:inputType="date"
-        tools:text="kek_day" />
-
+        <EditText
+            android:id="@+id/local_date_time"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@android:color/transparent"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:inputType="datetime"
+            android:textSize="14sp"
+            tools:text="kek_hour" />
+    </LinearLayout>
 
 </LinearLayout>

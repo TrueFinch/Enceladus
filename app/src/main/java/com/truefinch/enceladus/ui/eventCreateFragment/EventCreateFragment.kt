@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.truefinch.enceladus.R
+import kotlinx.android.synthetic.main.fragment_event.*
+import java.time.ZonedDateTime
 
 class EventCreateFragment : Fragment() {
 
@@ -27,6 +29,8 @@ class EventCreateFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(EventCreateViewModel::class.java)
+        startDateTimePicker.dateTime = ZonedDateTime.now()
+        endDateTimePicker.dateTime = ZonedDateTime.now().plusHours(1)
         // TODO: Use the ViewModel
     }
 

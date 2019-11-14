@@ -9,5 +9,6 @@
     <string name="title_new_event">New event</string>
     <string name="title_placeholder">Event title</string>
     <string name="label_all_day">All day</string>
-    <string name="date_time_label">Start</string>
+    <string name="date_time_label_start">Start</string>
+    <string name="date_time_label_end">End</string>
 </resources>
