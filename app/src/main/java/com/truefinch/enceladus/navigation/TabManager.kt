@@ -63,7 +63,7 @@ class TabManager(private val mainActivity: MainActivity) {
     }
 
     private val _navNewEventController: NavController by lazy {
-        mainActivity.findNavController(R.id.new_event_tab).apply {
+        mainActivity.findNavController(R.id.event_tab).apply {
             graph = navInflater.inflate(R.navigation.navigation_graph_new_event)
         }
     }
@@ -83,7 +83,7 @@ class TabManager(private val mainActivity: MainActivity) {
     private val startTabContainer: View by lazy { mainActivity.start_tab_container }
     private val monthTabContainer: View by lazy { mainActivity.month_tab_container }
     private val weekTabContainer: View by lazy { mainActivity.week_tab_container }
-    private val newEventTabContainer: View by lazy { mainActivity.new_event_tab_container }
+    private val newEventTabContainer: View by lazy { mainActivity.event_tab_container }
     private val dayTabContainer: View by lazy { mainActivity.day_tab_container }
     private val scheduleTabContainer: View by lazy { mainActivity.schedule_tab_container }
 

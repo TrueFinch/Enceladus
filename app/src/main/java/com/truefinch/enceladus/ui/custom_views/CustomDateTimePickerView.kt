@@ -80,13 +80,13 @@ class CustomDateTimePickerView : LinearLayout {
         }
     }
 
-    public var zoneId: ZoneId
+    var zoneId: ZoneId
         get() = dateTime.zone
         set(value) {
             dateTime = dateTime.withZoneSameLocal(value)
         }
 
-    public var dateTime: ZonedDateTime
+    var dateTime: ZonedDateTime
         get() = _dateTime
         set(value) {
             _dateTime = value

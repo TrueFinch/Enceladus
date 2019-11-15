@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.eventCreateFragment.EventCreateFragment">
+    tools:context=".ui.eventFragment.EventFragment">
 
 
     <LinearLayout
@@ -23,8 +23,7 @@
             android:ems="10"
             android:hint="@string/title_placeholder"
             android:inputType="text"
-            android:singleLine="true"
-            android:text="@string/title_placeholder" />
+            android:singleLine="true" />
 
         <com.truefinch.enceladus.ui.custom_views.CustomDateTimePickerView
             android:id="@+id/startDateTimePicker"
@@ -36,7 +35,29 @@
             android:id="@+id/endDateTimePicker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:date_time_label="@string/date_time_label_end" />
+            app:date_time_label="@string/date_time_label_end">
+
+        </com.truefinch.enceladus.ui.custom_views.CustomDateTimePickerView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView" />
+        </LinearLayout>
 
     </LinearLayout>
 
