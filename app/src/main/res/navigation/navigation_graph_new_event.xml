@@ -7,7 +7,16 @@
 
     <fragment
         android:id="@+id/eventFragment"
-        android:name="com.truefinch.enceladus.ui.eventCreateFragment.EventCreateFragment"
+        android:name="com.truefinch.enceladus.ui.eventFragment.EventFragment"
         android:label="fragment_event"
-        tools:layout="@layout/fragment_event" />
+        tools:layout="@layout/fragment_event">
+        <action
+            android:id="@+id/action_eventFragment_to_recurrencePickerFragment"
+            app:destination="@id/recurrencePickerFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/recurrencePickerFragment"
+        android:name="com.truefinch.enceladus.ui.pickers.RecurrencePickerFragment"
+        android:label="fragment_recurrence_picker"
+        tools:layout="@layout/fragment_recurrence_picker" />
 </navigation>

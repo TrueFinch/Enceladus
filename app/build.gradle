@@ -53,7 +53,7 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.2.0-alpha01'
     implementation 'com.android.support:design:28.0.0'
-    implementation 'com.maltaisn:recurpicker:2.0.0'
+    implementation 'com.code-troopers.betterpickers:library:3.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -1,0 +1,5 @@
+<resources>
+    <declare-styleable name="RecurrencePickerView">
+        <attr name="switch_text" format="string" />
+    </declare-styleable>
+</resources>

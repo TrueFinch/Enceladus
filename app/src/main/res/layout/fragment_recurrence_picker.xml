@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.pickers.RecurrencePickerFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <Spinner
+        android:id="@+id/spinner_rec_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/recurrence_types" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_freq_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tvInterval"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Interval" />
+
+            <EditText
+                android:id="@+id/etIntervalValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/interval_value_hint"
+                android:inputType="number" />
+
+            <TextView
+                android:id="@+id/tvIntervalUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="hour" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

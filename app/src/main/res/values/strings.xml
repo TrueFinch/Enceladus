@@ -11,4 +11,17 @@
     <string name="label_all_day">All day</string>
     <string name="date_time_label_start">Start</string>
     <string name="date_time_label_end">End</string>
+    <string name="repeat">Repeat</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="interval_value_hint">1</string>
+
+    <string-array name="recurrence_types">
+        <item>Hourly</item>
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Yearly</item>
+    </string-array>
 </resources>
