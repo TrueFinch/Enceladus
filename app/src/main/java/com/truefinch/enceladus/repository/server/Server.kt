@@ -8,6 +8,7 @@ import io.reactivex.schedulers.Schedulers
 import okhttp3.Headers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.logging.HttpLoggingInterceptor.Level
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -17,17 +18,17 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 
 class Server {
-    private val baseUrl = "http://planner.skillmasters.ga/"
+    private val baseUrl = "http://frrcode.com:9040"
     internal lateinit var api: PlannerApi
 
     init {
         val logging = HttpLoggingInterceptor()
-        logging.level = HttpLoggingInterceptor.Level.BODY
+        logging.level = Level.BODY
 
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(logging)
             .addInterceptor { chain ->
-                //                val token = InjectApplication.inject
+                //                val token = InjectApplication.instante
 //                    .getSharedPreferences(USER_ID_TOKEN_PREF, Context.MODE_PRIVATE)
 //                    .getString(USER_ID_TOKEN, "")
                 val token = "serega_mem"
@@ -48,9 +49,9 @@ class Server {
                 val request = chain.request()
                 val response = chain.proceed(request)
 
-                when (response.code()) {
-                    204 -> throw NoContent(response.message())
-                    400 -> throw BadRequest(response.message())
+                when (response.code) {
+                    204 -> throw NoContent(response.message)
+                    400 -> throw BadRequest(response.message)
                     401 -> throw NotAuthorized()
                     403 -> throw AccessDenied()
                     404 -> throw NotFind()
