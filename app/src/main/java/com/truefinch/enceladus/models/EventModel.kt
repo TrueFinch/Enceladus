@@ -7,7 +7,6 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 
 @Entity
-@Parcelize
 data class EventModel internal constructor(
     val id: Long,
     val title: String,
@@ -17,7 +16,7 @@ data class EventModel internal constructor(
     private val isCanceled: Boolean,
     var start_date: ZonedDateTime,
     var end_date: ZonedDateTime
-) : Parcelable {
+) {
 
     init {
         start_date = start_date.withZoneSameInstant(ZoneId.systemDefault())

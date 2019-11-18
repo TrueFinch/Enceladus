@@ -1,4 +1,4 @@
-package com.truefinch.enceladus.util
+package com.truefinch.enceladus.utils
 
 import android.view.View
 import androidx.annotation.IdRes

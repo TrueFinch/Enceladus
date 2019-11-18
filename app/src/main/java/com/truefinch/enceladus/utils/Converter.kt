@@ -1,7 +1,4 @@
-package com.truefinch.enceladus.util
-
-import java.time.ZonedDateTime
-import java.util.*
+package com.truefinch.enceladus.utils
 
 //fun toCalendar(s: ZonedDateTime): Calendar {
 //    return GregorianCalendar(s)

@@ -23,7 +23,7 @@
         android:id="@+id/material_calendar_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:mcv_selectionColor="#00F"
+        app:mcv_selectionColor="@color/colorPrimary"
         app:mcv_showOtherDates="all"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

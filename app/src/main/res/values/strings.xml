@@ -17,11 +17,52 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="interval_value_hint">1</string>
 
-    <string-array name="recurrence_types">
+    <string name="lbl_short_monday">Mon</string>
+    <string name="lbl_short_tuesday">Tue</string>
+    <string name="lbl_short_wednesday">Wed</string>
+    <string name="lbl_short_thursday">Thu</string>
+    <string name="lbl_short_friday">Fri</string>
+    <string name="lbl_short_saturday">Sat</string>
+    <string name="lbl_short_sunday">Sun</string>
+    <string name="lbl_interval">Interval</string>
+
+    <string-array name="recurrence_unit">
+        <item>hour</item>
+        <item>day</item>
+        <item>week</item>
+        <item>month</item>
+        <item>year</item>
+    </string-array>
+
+    <string-array name="recurrence_units">
+        <item>hours</item>
+        <item>days</item>
+        <item>weeks</item>
+        <item>months</item>
+        <item>years</item>
+    </string-array>
+
+    <string-array name="recurrence_type_items">
         <item>Hourly</item>
         <item>Daily</item>
         <item>Weekly</item>
         <item>Monthly</item>
         <item>Yearly</item>
+    </string-array>
+
+    <string-array name="week_days_short">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
+
+    <string-array name="repeat_options">
+        <item>Forever</item>
+        <item>Until a date</item>
+        <item>For a number of events</item>
     </string-array>
 </resources>

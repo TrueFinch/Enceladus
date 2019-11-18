@@ -1,21 +1,25 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorLightBlue</item>
     </style>
 
     <style name="CustomDatePickerDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:dialogTheme">@style/MyDialogTheme</item>
         <item name="android:datePickerStyle">@style/MyDatePicker</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/customButton</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/customButton</item>
     </style>
 
     <style name="CustomTimePickerDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:dialogTheme">@style/MyDialogTheme</item>
         <item name="android:timePickerStyle">@style/MyTimePicker</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/customButton</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/customButton</item>
     </style>
 
     <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog">
@@ -30,6 +34,11 @@
 
     <style name="MyTimePicker" parent="@android:style/Widget.Material.TimePicker">
         <item name="android:timePickerMode">spinner</item>
+    </style>
+
+    <style name="customButton" parent="Theme.MaterialComponents.Light">
+        <item name="android:backgroundTint">@color/colorPrimary</item>
+        <item name="android:layout_marginLeft">10dp</item>
     </style>
 
 </resources>

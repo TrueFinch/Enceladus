@@ -5,6 +5,7 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
 import com.truefinch.enceladus.R
 import kotlinx.android.synthetic.main.custom_date_time_picker_view.view.*
 import java.time.LocalDateTime
@@ -55,10 +56,17 @@ class CustomDateTimePickerView : LinearLayout {
                             )
                         }, dateTime.hour, dateTime.minute, false
                     )
+//                    tpd.getButton(DatePickerDialog.BUTTON_NEGATIVE)
+//                        .setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
+//                    tpd.getButton(DatePickerDialog.BUTTON_POSITIVE)
+//                        .setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
                     tpd.show()
                 }, dateTime.year, dateTime.monthValue - 1, dateTime.dayOfMonth
             )
             dpd.show()
+//            dpd.getButton(DatePickerDialog.BUTTON_NEGATIVE).
+//            dpd.getButton(DatePickerDialog.BUTTON_POSITIVE)
+//                .setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
         }
     }
 

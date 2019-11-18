@@ -8,14 +8,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.lifecycle.Observer
 import com.alamkanak.weekview.DateTimeInterpreter
 import com.truefinch.enceladus.R
 
 import com.alamkanak.weekview.WeekView
 import com.truefinch.enceladus.models.EventModel
-import com.truefinch.enceladus.util.lazyView
+import com.truefinch.enceladus.utils.lazyView
 import java.util.*
 
 

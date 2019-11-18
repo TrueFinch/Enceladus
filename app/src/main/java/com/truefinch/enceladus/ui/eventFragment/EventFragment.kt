@@ -8,9 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import com.codetroopers.betterpickers.recurrencepicker.EventRecurrence
-import com.codetroopers.betterpickers.recurrencepicker.EventRecurrenceFormatter
-import com.codetroopers.betterpickers.recurrencepicker.RecurrencePickerDialogFragment
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.prolificinteractive.materialcalendarview.CalendarUtils
 import com.truefinch.enceladus.R
 import kotlinx.android.synthetic.main.fragment_event.*
@@ -22,7 +20,7 @@ import java.time.ZonedDateTime
 import java.util.*
 
 
-class EventFragment : Fragment(), RecurrencePickerDialogFragment.OnRecurrenceSetListener {
+class EventFragment : Fragment() {
 
     companion object {
         fun newInstance() = EventFragment()
@@ -53,30 +51,30 @@ class EventFragment : Fragment(), RecurrencePickerDialogFragment.OnRecurrenceSet
         val recPicker = recurrencePickerView5
         recPicker.dateTime = selectedDate
         recPicker.switch_recurrence.setOnClickListener {
-            //            findNavController().navigate(R.id.action_eventFragment_to_recurrencePickerFragment)
-            val fm = fragmentManager!!
-            val bundle = Bundle()
-            val time = Time.from(Instant.now())
-            bundle.putLong(
-                RecurrencePickerDialogFragment.BUNDLE_START_TIME_MILLIS,
-                time.toInstant().toEpochMilli()
-            )
-            bundle.putString(
-                RecurrencePickerDialogFragment.BUNDLE_TIME_ZONE,
-                ZonedDateTime.now().zone.toString()
-            )
-            bundle.putBoolean(RecurrencePickerDialogFragment.BUNDLE_HIDE_SWITCH_BUTTON, true)
-
-            // may be more efficient to serialize and pass in EventRecurrence
-            bundle.putString(RecurrencePickerDialogFragment.BUNDLE_RRULE, mRrule)
-
-            var dialogFragment: RecurrencePickerDialogFragment? =
-                fm.findFragmentByTag(FRAG_TAG_RECUR_PICKER) as RecurrencePickerDialogFragment?
-            dialogFragment?.dismiss()
-            dialogFragment = RecurrencePickerDialogFragment()
-            dialogFragment.arguments = bundle
-            dialogFragment.setOnRecurrenceSetListener(this@EventFragment)
-            dialogFragment.show(fm, FRAG_TAG_RECUR_PICKER)
+            findNavController(this).navigate(R.id.action_eventFragment_to_recurrencePickerFragment)
+//            val fm = fragmentManager!!
+//            val bundle = Bundle()
+//            val time = Time.from(Instant.now())
+//            bundle.putLong(
+//                RecurrencePickerDialogFragment.BUNDLE_START_TIME_MILLIS,
+//                time.toInstant().toEpochMilli()
+//            )
+//            bundle.putString(
+//                RecurrencePickerDialogFragment.BUNDLE_TIME_ZONE,
+//                ZonedDateTime.now().zone.toString()
+//            )
+//            bundle.putBoolean(RecurrencePickerDialogFragment.BUNDLE_HIDE_SWITCH_BUTTON, true)
+//
+//            // may be more efficient to serialize and pass in EventRecurrence
+//            bundle.putString(RecurrencePickerDialogFragment.BUNDLE_RRULE, mRrule)
+//
+//            var dialogFragment: RecurrencePickerDialogFragment? =
+//                fm.findFragmentByTag(FRAG_TAG_RECUR_PICKER) as RecurrencePickerDialogFragment?
+//            dialogFragment?.dismiss()
+//            dialogFragment = RecurrencePickerDialogFragment()
+//            dialogFragment.arguments = bundle
+//            dialogFragment.setOnRecurrenceSetListener(this@EventFragment)
+//            dialogFragment.show(fm, FRAG_TAG_RECUR_PICKER)
         }
 
     }
@@ -85,15 +83,15 @@ class EventFragment : Fragment(), RecurrencePickerDialogFragment.OnRecurrenceSet
 
     var mRrule: String = ""
 
-    private val mEventRecurrence = EventRecurrence()
-
-    override fun onRecurrenceSet(rrule: String) {
-        mRrule = rrule
-        if (mRrule != null) {
-            mEventRecurrence.parse(mRrule)
-        }
-        populateRepeats()
-    }
+//    private val mEventRecurrence = EventRecurrence()
+//
+//    override fun onRecurrenceSet(rrule: String) {
+//        mRrule = rrule
+//        if (mRrule != null) {
+//            mEventRecurrence.parse(mRrule)
+//        }
+//        populateRepeats()
+//    }
 
 //    override fun onResume() {
 //        // Example of reattaching to the fragment
@@ -109,8 +107,8 @@ class EventFragment : Fragment(), RecurrencePickerDialogFragment.OnRecurrenceSet
         var repeatString = ""
         val enabled: Boolean
         if (!TextUtils.isEmpty(mRrule)) {
-            repeatString =
-                EventRecurrenceFormatter.getRepeatString(this.context, r, mEventRecurrence, true)
+//            repeatString =
+//                EventRecurrenceFormatter.getRepeatString(this.context, r, mEventRecurrence, true)
         }
 
         label_recurrence_rule.setText(mRrule + "\n" + repeatString)
