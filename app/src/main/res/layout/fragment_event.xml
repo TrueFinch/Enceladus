@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,14 +7,28 @@
     android:orientation="vertical"
     tools:context=".ui.eventFragment.EventFragment">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tbEventInstance"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/colorPrimary"
+        android:theme="@android:style/ThemeOverlay.Material"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="?attr/homeAsUpIndicator">
+
+    </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
+        android:id="@+id/lytEvent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:textAlignment="center">
+        android:textAlignment="center"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tbEventInstance">
 
         <EditText
             android:id="@+id/titleEditText"
@@ -46,6 +60,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <EditText
+            android:id="@+id/descriptionEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/description_placeholder"
+            android:inputType="text"
+            android:singleLine="true" />
     </LinearLayout>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
