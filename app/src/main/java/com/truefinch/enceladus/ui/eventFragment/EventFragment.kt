@@ -2,32 +2,35 @@ package com.truefinch.enceladus.ui.eventFragment
 
 
 import android.os.Bundle
-import android.text.TextUtils
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment.findNavController
-import com.prolificinteractive.materialcalendarview.CalendarUtils
 import com.truefinch.enceladus.R
+import com.truefinch.enceladus.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_event.*
 import kotlinx.android.synthetic.main.recurrence_picker_view.*
 import kotlinx.android.synthetic.main.recurrence_picker_view.view.*
-import java.sql.Time
-import java.time.Instant
 import java.time.ZonedDateTime
-import java.util.*
 
 
 class EventFragment : Fragment() {
-
     companion object {
         fun newInstance() = EventFragment()
     }
 
     private val viewModel: EventViewModel by lazy {
         ViewModelProviders.of(this).get(EventViewModel::class.java)
+    }
+
+    private val sharedViewModel: SharedViewModel by lazy {
+        activity?.run {
+            ViewModelProviders.of(this)[SharedViewModel::class.java]
+        } ?: throw Exception("Invalid Activity")
     }
 
     override fun onCreateView(
@@ -40,77 +43,42 @@ class EventFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        Calendar.getInstance(Locale.ENGLISH).firstDayOfWeek = Calendar.MONDAY
-        Calendar.getInstance().firstDayOfWeek = Calendar.MONDAY
-        android.icu.util.Calendar.getInstance(Locale.ENGLISH).firstDayOfWeek =
-            android.icu.util.Calendar.MONDAY
-        android.icu.util.Calendar.getInstance().firstDayOfWeek = android.icu.util.Calendar.MONDAY
-        val selectedDate = viewModel.selectedDateTime.value!!
+//        Calendar.getInstance(Locale.ENGLISH).firstDayOfWeek = Calendar.MONDAY
+//        Calendar.getInstance().firstDayOfWeek = Calendar.MONDAY
+//        android.icu.util.Calendar.getInstance(Locale.ENGLISH).firstDayOfWeek =
+//            android.icu.util.Calendar.MONDAY
+//        android.icu.util.Calendar.getInstance().firstDayOfWeek = android.icu.util.Calendar.MONDAY
+
+        val selectedDate = sharedViewModel.selectedDateTime
         startDateTimePicker.dateTime = selectedDate
         endDateTimePicker.dateTime = selectedDate.plusHours(1)
         val recPicker = recurrencePickerView5
         recPicker.dateTime = selectedDate
         recPicker.switch_recurrence.setOnClickListener {
-            findNavController(this).navigate(R.id.action_eventFragment_to_recurrencePickerFragment)
-//            val fm = fragmentManager!!
-//            val bundle = Bundle()
-//            val time = Time.from(Instant.now())
-//            bundle.putLong(
-//                RecurrencePickerDialogFragment.BUNDLE_START_TIME_MILLIS,
-//                time.toInstant().toEpochMilli()
-//            )
-//            bundle.putString(
-//                RecurrencePickerDialogFragment.BUNDLE_TIME_ZONE,
-//                ZonedDateTime.now().zone.toString()
-//            )
-//            bundle.putBoolean(RecurrencePickerDialogFragment.BUNDLE_HIDE_SWITCH_BUTTON, true)
-//
-//            // may be more efficient to serialize and pass in EventRecurrence
-//            bundle.putString(RecurrencePickerDialogFragment.BUNDLE_RRULE, mRrule)
-//
-//            var dialogFragment: RecurrencePickerDialogFragment? =
-//                fm.findFragmentByTag(FRAG_TAG_RECUR_PICKER) as RecurrencePickerDialogFragment?
-//            dialogFragment?.dismiss()
-//            dialogFragment = RecurrencePickerDialogFragment()
-//            dialogFragment.arguments = bundle
-//            dialogFragment.setOnRecurrenceSetListener(this@EventFragment)
-//            dialogFragment.show(fm, FRAG_TAG_RECUR_PICKER)
+            if (switch_recurrence.isChecked) {
+                findNavController(this).navigate(R.id.action_eventFragment_to_recurrencePickerFragment)
+            }
         }
 
-    }
+        titleEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.eventTitle = s.toString()
+            }
 
-    private val FRAG_TAG_RECUR_PICKER = "recurrencePickerDialogFragment"
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
 
-    var mRrule: String = ""
-
-//    private val mEventRecurrence = EventRecurrence()
-//
-//    override fun onRecurrenceSet(rrule: String) {
-//        mRrule = rrule
-//        if (mRrule != null) {
-//            mEventRecurrence.parse(mRrule)
-//        }
-//        populateRepeats()
-//    }
-
-//    override fun onResume() {
-//        // Example of reattaching to the fragment
-//        super.onResume()
-//        val rpd = fragmentManager?.findFragmentByTag(
-//            FRAG_TAG_RECUR_PICKER
-//        ) as RecurrencePickerDialogFragment
-//        rpd?.setOnRecurrenceSetListener(this)
-//    }
-
-    private fun populateRepeats() {
-        val r = resources
-        var repeatString = ""
-        val enabled: Boolean
-        if (!TextUtils.isEmpty(mRrule)) {
-//            repeatString =
-//                EventRecurrenceFormatter.getRepeatString(this.context, r, mEventRecurrence, true)
+        tbEventInstance.setNavigationOnClickListener {
+            findNavController(this).navigateUp()
         }
 
-        label_recurrence_rule.setText(mRrule + "\n" + repeatString)
+        startDateTimePicker.setOnDateTimeChangeListener { zonedDateTime: ZonedDateTime, id: Int ->
+            if (id == R.id.startDateTimePicker) {
+                viewModel.startDateTime = zonedDateTime
+            } else {
+                viewModel.endDateTime = zonedDateTime
+            }
+        }
     }
 }

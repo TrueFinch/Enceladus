@@ -16,6 +16,7 @@ import java.util.*
 
 class RecurrencePickerFragment : DialogFragment(), AdapterView.OnItemSelectedListener {
 
+
     internal var currentRecType: RecurrenceType
         get() = _currentRecType
         set(value) {

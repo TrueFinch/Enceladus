@@ -5,7 +5,6 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
-import androidx.core.content.ContextCompat
 import com.truefinch.enceladus.R
 import kotlinx.android.synthetic.main.custom_date_time_picker_view.view.*
 import java.time.LocalDateTime
@@ -56,17 +55,10 @@ class CustomDateTimePickerView : LinearLayout {
                             )
                         }, dateTime.hour, dateTime.minute, false
                     )
-//                    tpd.getButton(DatePickerDialog.BUTTON_NEGATIVE)
-//                        .setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
-//                    tpd.getButton(DatePickerDialog.BUTTON_POSITIVE)
-//                        .setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
                     tpd.show()
                 }, dateTime.year, dateTime.monthValue - 1, dateTime.dayOfMonth
             )
             dpd.show()
-//            dpd.getButton(DatePickerDialog.BUTTON_NEGATIVE).
-//            dpd.getButton(DatePickerDialog.BUTTON_POSITIVE)
-//                .setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
         }
     }
 
@@ -98,10 +90,25 @@ class CustomDateTimePickerView : LinearLayout {
         get() = _dateTime
         set(value) {
             _dateTime = value
+            _dateTimeChangeListener?.onDateTimeChange(dateTime, this.id)
             updateViewDateTime()
         }
 
     private lateinit var _dateTime: ZonedDateTime
     private var _pattern: String = "eee, dd LLL yyyy, hh:mm a"
     private var _localPattern: String = "eee, dd LLL yyyy, hh:mm a, O"
+
+    private var _dateTimeChangeListener: onDateTimeChangeListener? = null
+
+    interface onDateTimeChangeListener {
+        //id -- of dateTimePickerView
+        fun onDateTimeChange(zonedDateTime: ZonedDateTime, id: Int)
+    }
+
+    fun setOnDateTimeChangeListener(listener: (zonedDateTime: ZonedDateTime, id: Int) -> Unit) {
+        _dateTimeChangeListener = object : onDateTimeChangeListener {
+            override fun onDateTimeChange(zonedDateTime: ZonedDateTime, id: Int) =
+                listener(zonedDateTime, id)
+        }
+    }
 }

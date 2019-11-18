@@ -1,14 +1,20 @@
 package com.truefinch.enceladus
 
 import android.app.Application
-import android.content.res.Configuration
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import java.util.*
+import com.truefinch.enceladus.repository.server.Server
 
 
 class EnceladusApp : Application() {
+
+    companion object {
+        lateinit var instance: EnceladusApp
+    }
+
+    public lateinit var server: Server
     override fun onCreate() {
         super.onCreate()
+        server = Server()
+
+        instance = this
     }
 }
