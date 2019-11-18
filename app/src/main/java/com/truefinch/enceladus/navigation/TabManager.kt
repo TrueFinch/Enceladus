@@ -4,10 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isInvisible
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.truefinch.enceladus.MainActivity
 import com.truefinch.enceladus.R
+import com.truefinch.enceladus.ui.eventFragment.EventFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class TabManager(private val mainActivity: MainActivity) {

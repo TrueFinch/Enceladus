@@ -20,11 +20,14 @@ import io.reactivex.schedulers.Schedulers
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
-    private val tabManager: TabManager by lazy { TabManager(this) }
+    private lateinit var tabManager: TabManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        EnceladusApp.instance.tabManager = TabManager(this)
+        tabManager = EnceladusApp.instance.tabManager
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(this)

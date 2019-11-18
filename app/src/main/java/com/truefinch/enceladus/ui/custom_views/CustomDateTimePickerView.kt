@@ -98,15 +98,15 @@ class CustomDateTimePickerView : LinearLayout {
     private var _pattern: String = "eee, dd LLL yyyy, hh:mm a"
     private var _localPattern: String = "eee, dd LLL yyyy, hh:mm a, O"
 
-    private var _dateTimeChangeListener: onDateTimeChangeListener? = null
+    private var _dateTimeChangeListener: OnDateTimeChangeListener? = null
 
-    interface onDateTimeChangeListener {
+    interface OnDateTimeChangeListener {
         //id -- of dateTimePickerView
         fun onDateTimeChange(zonedDateTime: ZonedDateTime, id: Int)
     }
 
     fun setOnDateTimeChangeListener(listener: (zonedDateTime: ZonedDateTime, id: Int) -> Unit) {
-        _dateTimeChangeListener = object : onDateTimeChangeListener {
+        _dateTimeChangeListener = object : OnDateTimeChangeListener {
             override fun onDateTimeChange(zonedDateTime: ZonedDateTime, id: Int) =
                 listener(zonedDateTime, id)
         }

@@ -23,6 +23,12 @@ class EventViewModel : ViewModel() {
             _eventTitle.value = value
         }
 
+    var eventDescription: String
+        get() = _eventDescription.value!!
+        set(value) {
+            _eventDescription.value = value
+        }
+
     private val _startDateTime by lazy {
         return@lazy MutableLiveData<ZonedDateTime>()
     }
@@ -33,5 +39,16 @@ class EventViewModel : ViewModel() {
 
     private val _eventTitle by lazy {
         return@lazy MutableLiveData<String>("")
+    }
+
+    private val _eventDescription by lazy {
+        return@lazy MutableLiveData<String>("")
+    }
+
+    public fun clear() {
+        _startDateTime.value = null
+        _endDateTime.value = null
+        _eventTitle.value = null
+        _eventDescription.value = null
     }
 }

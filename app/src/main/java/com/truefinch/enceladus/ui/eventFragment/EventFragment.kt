@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment.findNavController
+import com.truefinch.enceladus.EnceladusApp
 import com.truefinch.enceladus.R
 import com.truefinch.enceladus.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_event.*
@@ -43,20 +44,11 @@ class EventFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-//        Calendar.getInstance(Locale.ENGLISH).firstDayOfWeek = Calendar.MONDAY
-//        Calendar.getInstance().firstDayOfWeek = Calendar.MONDAY
-//        android.icu.util.Calendar.getInstance(Locale.ENGLISH).firstDayOfWeek =
-//            android.icu.util.Calendar.MONDAY
-//        android.icu.util.Calendar.getInstance().firstDayOfWeek = android.icu.util.Calendar.MONDAY
-
-        val selectedDate = sharedViewModel.selectedDateTime
-        startDateTimePicker.dateTime = selectedDate
-        endDateTimePicker.dateTime = selectedDate.plusHours(1)
+        setDefault()
         val recPicker = recurrencePickerView5
-        recPicker.dateTime = selectedDate
         recPicker.switch_recurrence.setOnClickListener {
             if (switch_recurrence.isChecked) {
-                findNavController(this).navigate(R.id.action_eventFragment_to_recurrencePickerFragment)
+                EnceladusApp.instance.tabManager.currentNavController!!.navigate(R.id.action_eventFragment_to_recurrencePickerFragment)
             }
         }
 
@@ -69,16 +61,43 @@ class EventFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
+        titleEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.eventTitle = s.toString()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
         tbEventInstance.setNavigationOnClickListener {
-            findNavController(this).navigateUp()
+            viewModel.clear()
+            setDefault()
+            activity?.onBackPressed()
         }
 
         startDateTimePicker.setOnDateTimeChangeListener { zonedDateTime: ZonedDateTime, id: Int ->
-            if (id == R.id.startDateTimePicker) {
-                viewModel.startDateTime = zonedDateTime
-            } else {
-                viewModel.endDateTime = zonedDateTime
-            }
+            onDateTimeListener(zonedDateTime, id)
         }
+        endDateTimePicker.setOnDateTimeChangeListener { zonedDateTime: ZonedDateTime, id: Int ->
+            onDateTimeListener(zonedDateTime, id)
+        }
+    }
+
+    private fun onDateTimeListener(zonedDateTime: ZonedDateTime, id: Int) {
+        if (id == R.id.startDateTimePicker) {
+            viewModel.startDateTime = zonedDateTime
+        } else {
+            viewModel.endDateTime = zonedDateTime
+        }
+    }
+
+    private fun setDefault() {
+        val selectedDate = sharedViewModel.selectedDateTime
+        startDateTimePicker.dateTime = selectedDate
+        endDateTimePicker.dateTime = selectedDate.plusHours(1)
+        val recPicker = recurrencePickerView5
+        recPicker.dateTime = selectedDate
+        recPicker.switch_recurrence.isChecked = false
     }
 }

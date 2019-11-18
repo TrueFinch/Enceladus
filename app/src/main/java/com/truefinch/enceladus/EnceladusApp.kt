@@ -1,6 +1,7 @@
 package com.truefinch.enceladus
 
 import android.app.Application
+import com.truefinch.enceladus.navigation.TabManager
 import com.truefinch.enceladus.repository.server.Server
 
 
@@ -10,6 +11,8 @@ class EnceladusApp : Application() {
         lateinit var instance: EnceladusApp
     }
 
+
+    public lateinit var tabManager: TabManager
     public lateinit var server: Server
     override fun onCreate() {
         super.onCreate()
