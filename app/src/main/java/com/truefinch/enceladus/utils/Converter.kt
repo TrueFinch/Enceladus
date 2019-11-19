@@ -1,9 +1,14 @@
 package com.truefinch.enceladus.utils
 
-//fun toCalendar(s: ZonedDateTime): Calendar {
-//    return GregorianCalendar(s)
-//}
-//
-//fun fromCalendar(s: Calendar): ZonedDateTime {
-//    return DateTimeUtils.toZonedDateTime(s)
-//}
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+
+fun toLongUTC(z: ZonedDateTime): Long {
+    val utc = z.withZoneSameInstant(ZoneOffset.UTC)
+    return utc.toInstant().toEpochMilli()
+}
+
+fun fromLongUTC(l: Long): ZonedDateTime {
+    return ZonedDateTime.ofInstant(Instant.ofEpochMilli(l), ZoneOffset.UTC)
+}

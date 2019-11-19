@@ -9,11 +9,9 @@ import java.time.ZonedDateTime
 @Entity
 data class EventModel internal constructor(
     val id: Long,
-    val title: String,
-    private val location: String,
+    val title: String?,
+    private val location: String?,
     val pattern_id: Long,
-    val isAllDay: Boolean,
-    private val isCanceled: Boolean,
     var start_date: ZonedDateTime,
     var end_date: ZonedDateTime
 ) {
