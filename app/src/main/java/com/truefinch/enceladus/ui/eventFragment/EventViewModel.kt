@@ -1,7 +1,13 @@
 package com.truefinch.enceladus.ui.eventFragment
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.truefinch.enceladus.EnceladusApp
+import com.truefinch.enceladus.repository.server.model.EventRequest
+import com.truefinch.enceladus.repository.server.model.PatternRequest
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.time.ZonedDateTime
 
 class EventViewModel : ViewModel() {
@@ -50,5 +56,20 @@ class EventViewModel : ViewModel() {
         _endDateTime.value = null
         _eventTitle.value = null
         _eventDescription.value = null
+    }
+
+    public fun sendEvent() {
+        val server = EnceladusApp.instance.server
+        val api = EnceladusApp.instance.server.api
+
+//        api.createEvent(EventRequest(eventDescription, null, eventTitle, "mem"))
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribeOn(Schedulers.io())
+//            .subscribe ({
+//                Log.d("debug","Succees")
+//            }, {
+//                Log.d("debug", it.toString())
+//            })
+//        api.createPattern()
     }
 }

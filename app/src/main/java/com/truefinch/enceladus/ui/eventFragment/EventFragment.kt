@@ -4,12 +4,9 @@ package com.truefinch.enceladus.ui.eventFragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.truefinch.enceladus.EnceladusApp
 import com.truefinch.enceladus.R
 import com.truefinch.enceladus.SharedViewModel
@@ -17,7 +14,7 @@ import kotlinx.android.synthetic.main.fragment_event.*
 import kotlinx.android.synthetic.main.recurrence_picker_view.*
 import kotlinx.android.synthetic.main.recurrence_picker_view.view.*
 import java.time.ZonedDateTime
-
+import android.view.MenuInflater
 
 class EventFragment : Fragment() {
     companion object {
@@ -32,6 +29,25 @@ class EventFragment : Fragment() {
         activity?.run {
             ViewModelProviders.of(this)[SharedViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        if (id == R.id.action_submit_event) {
+            //todo: send command to viewmodel to send event on server
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_event_create, menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onCreateView(
@@ -71,7 +87,6 @@ class EventFragment : Fragment() {
         })
 
         tbEventInstance.setNavigationOnClickListener {
-            viewModel.clear()
             setDefault()
             activity?.onBackPressed()
         }
@@ -93,11 +108,14 @@ class EventFragment : Fragment() {
     }
 
     private fun setDefault() {
+        viewModel.clear()
         val selectedDate = sharedViewModel.selectedDateTime
         startDateTimePicker.dateTime = selectedDate
         endDateTimePicker.dateTime = selectedDate.plusHours(1)
         val recPicker = recurrencePickerView5
         recPicker.dateTime = selectedDate
         recPicker.switch_recurrence.isChecked = false
+        titleEditText.setText("")
+        descriptionEditText.setText("")
     }
 }

@@ -14,8 +14,8 @@
         android:background="@color/colorPrimary"
         android:theme="@android:style/ThemeOverlay.Material"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="?attr/homeAsUpIndicator">
-
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:menu="@menu/menu_event_create">
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
