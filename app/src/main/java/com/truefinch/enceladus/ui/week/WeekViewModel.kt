@@ -1,23 +1,27 @@
 package com.truefinch.enceladus.ui.week
 
-import androidx.lifecycle.LiveData
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.alamkanak.weekview.WeekViewDisplayable
-import com.truefinch.enceladus.ui.events.WeekEvent
-import java.time.LocalDate
+import com.truefinch.enceladus.EnceladusApp
+import com.truefinch.enceladus.models.EventModel
+import java.time.ZonedDateTime
 
 class WeekViewModel : ViewModel() {
+    private val server = EnceladusApp.instance.server
+    private val api = EnceladusApp.instance.server.api
+    private val repo = EnceladusApp.instance.repository
 
-    val events = MutableLiveData<List<WeekViewDisplayable<WeekEvent>>>()
+    private var _loadingSuccessCallback: OnLoadingSuccessCallback? = null
 
-//    fun fetchEvents(startDate: LocalDate, endDate: LocalDate) {
-//        events.value = database.getEventsInRange(startDate.toCalendar(), endDate.toCalendar())
-//    }
+    interface OnLoadingSuccessCallback {
+        fun onLoadingSuccess(events: List<EventModel>)
+    }
 
-//    private val _text = MutableLiveData<String>().apply {
-//        value = "This is week Fragment"
-//    }
-//    val text: LiveData<String> = _text
-    // TODO: Implement the ViewModel
+    fun setOnLoadingSuccessListener(listener: (events: List<EventModel>) -> Unit) {
+        _loadingSuccessCallback = object : OnLoadingSuccessCallback {
+            override fun onLoadingSuccess(events: List<EventModel>) = listener(events)
+        }
+    }
+
 }

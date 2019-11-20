@@ -24,6 +24,6 @@ data class EventModel internal constructor(
     val local_start_date: ZonedDateTime
         get() = start_date.withZoneSameLocal(ZoneId.systemDefault())
 
-    val local_finish_date: ZonedDateTime
+    val local_end_date: ZonedDateTime
         get() = end_date.withZoneSameLocal(ZoneId.systemDefault())
 }
