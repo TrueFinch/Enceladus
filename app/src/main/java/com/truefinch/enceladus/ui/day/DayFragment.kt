@@ -27,10 +27,6 @@ class DayFragment : Fragment() {
         viewModel =
             ViewModelProviders.of(this).get(DayViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_day, container, false)
-        val textView: TextView = root.findViewById(R.id.text_day)
-        viewModel.text.observe(this, Observer {
-            textView.text = it
-        })
         return root
     }
 

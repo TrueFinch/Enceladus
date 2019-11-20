@@ -1,22 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.day.DayFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.day.DayFragment">
 
-    <TextView
-        android:id="@+id/text_day"
+    <com.alamkanak.weekview.WeekView
+        android:id="@+id/dayView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        app:columnGap="1dp"
+        app:eventCornerRadius="4dp"
+        app:eventTextColor="@android:color/white"
+        app:firstDayOfWeek="monday"
+        app:headerRowBottomLineColor="#EEEEEE"
+        app:headerRowBottomLineWidth="1dp"
+        app:headerRowPadding="12dp"
+        app:headerRowTextSize="11dp"
+        app:hourHeight="60dp"
+        app:nowLineColor="#2789e4"
+        app:nowLineDotColor="#2789e4"
+        app:nowLineDotRadius="5dp"
+        app:nowLineStrokeWidth="1dp"
+        app:numberOfVisibleDays="1"
+        app:overlappingEventGap="1dp"
+        app:showCurrentTimeFirst="true"
+        app:showHeaderRowBottomLine="true"
+        app:showNowLine="true"
+        app:showNowLineDot="true"
+        app:showTimeColumnSeparator="true"
+        app:singleDayHorizontalMargin="8dp"
+        app:timeColumnBackgroundColor="#ffffffff"
+        app:timeColumnPadding="8dp"
+        app:timeColumnSeparatorColor="#EEEEEE"
+        app:timeColumnSeparatorStrokeWidth="1dp"
+        app:timeColumnTextColor="#8f000000"
+        app:timeColumnTextSize="12sp"
+        app:todayHeaderTextColor="#08090A" />
 
 </FrameLayout>

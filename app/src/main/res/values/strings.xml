@@ -27,6 +27,8 @@
     <string name="lbl_interval">Interval</string>
     <string name="description_placeholder">Description</string>
 
+    <string name="title_fake_event">...</string>
+
     <string-array name="recurrence_unit">
         <item>hour</item>
         <item>day</item>
