@@ -17,29 +17,26 @@ class EventRepository(val api: PlannerApi) : RepositoryInterface {
         val endUTC = toLongUTC(endLocal.withZoneSameInstant(ZoneOffset.UTC))
 
         return api.getEventsInstancesFromTo(startUTC, endUTC)
-            .map { it.data }
             .map {
-                val eventModels = ArrayList<EventModel>()
-                it.forEach { eventInstanceServer ->
-                    eventModels.add(
-                        api.getEventById(eventInstanceServer.event_id)
-                            .map { event -> event.data.first() }
-                            .map { eventServer ->
-                                EventModel(
-                                    eventInstanceServer.event_id,
-                                    eventServer.name,
-                                    eventServer.location,
-                                    eventInstanceServer.pattern_id,
-                                    eventInstanceServer.started_at,
-                                    eventInstanceServer.ended_at
-                                )
-                            }
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribeOn(Schedulers.io())
-                            .blockingGet())
-                }
-                eventModels.toList()
+                it.data
             }
+            .flattenAsFlowable { it }
+            .flatMap { eventInstanceServer ->
+                api.getEventById(eventInstanceServer.event_id)
+                    .map { event -> event.data.first() }
+                    .map { eventServer ->
+                        EventModel(
+                            eventInstanceServer.event_id,
+                            eventServer.name,
+                            eventServer.location,
+                            eventInstanceServer.pattern_id,
+                            eventInstanceServer.started_at,
+                            eventInstanceServer.ended_at
+                        )
+                    }
+                    .toFlowable()
+            }
+            .toList()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
     }

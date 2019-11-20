@@ -31,7 +31,7 @@ class Server {
                 //                val token = InjectApplication.instante
 //                    .getSharedPreferences(USER_ID_TOKEN_PREF, Context.MODE_PRIVATE)
 //                    .getString(USER_ID_TOKEN, "")
-                val token = "serega_mem"
+                val token = "tester1"
                 val originalRequest = chain.request()
 //                Log.d("OkHttp", "X-Firebase-Auth: $token")
 //                Log.d("OkHttp", "User id: ${getCurrentFirebaseUser().uid}")
