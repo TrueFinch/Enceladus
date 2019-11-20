@@ -36,7 +36,7 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
      * @param endDate A [Calendar] representing the end date of the month
      */
     override fun onLoadMore(startDate: Calendar, endDate: Calendar) {
-        Log.d("DEBUG", "onLoadMore")
+        Log.d("DEBUG", "WeekView.onLoadMore")
 
         val month = startDate.toInstant().atZone(ZoneId.systemDefault())
         val monthStart = month.toLocalDate()
