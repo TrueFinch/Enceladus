@@ -14,12 +14,9 @@ import com.alamkanak.weekview.*
 import com.truefinch.enceladus.R
 import com.truefinch.enceladus.SharedViewModel
 import com.truefinch.enceladus.ui.events.WeekEventView
+import com.truefinch.enceladus.utils.*
 import com.truefinch.enceladus.utils.DateFormatterUtil.Companion.formatToPattern
-import com.truefinch.enceladus.utils.lazyView
-import com.truefinch.enceladus.utils.toYearMonth
-import com.truefinch.enceladus.utils.toZoneDateTime
 import java.time.LocalTime
-import java.time.ZoneId
 import java.time.temporal.TemporalAdjusters
 import java.util.*
 
@@ -35,10 +32,8 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        Log.d(
-            "DEBUG",
-            "Thread: " + Thread.currentThread().id.toString() + ". WeekView.onCreateView"
-        )
+        logD(Thread.currentThread().id.toInt(), "WeekFragment.onCreateView")
+
         viewModel = ViewModelProviders.of(this).get(WeekViewModel::class.java)
         sharedViewModel = activity?.run {
             ViewModelProviders.of(this)[SharedViewModel::class.java]
@@ -49,10 +44,7 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(
-            "DEBUG",
-            "Thread: " + Thread.currentThread().id.toString() + ". WeekView.onViewCreated"
-        )
+        logD(Thread.currentThread().id.toInt(), "WeekFragment.onViewCreated")
 
         sharedViewModel.lastLoadedMonth.observe(this, Observer {
             onLoadingSuccess(it)
@@ -67,25 +59,17 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Log.d(
-            "DEBUG",
-            "Thread: " + Thread.currentThread().id.toString() + ". WeekView.onActivityCreated"
-        )
+        logD(Thread.currentThread().id.toInt(), "WeekFragment.onLoadMore")
 
         weekView.dateTimeInterpreter = object : DateTimeInterpreter {
-            override fun interpretTime(hour: Int): String {
-                return if (hour > 11) (hour - 12).toString() + " PM" else if (hour == 0) "12 M" else "$hour AM"
+            override fun interpretTime(hour: Int): String = when {
+                hour > 11 -> "${(hour - 12)} PM"
+                hour == 0 -> "12 M"
+                else -> "$hour AM"
             }
 
-
-            @SuppressLint("DefaultLocale")
-            override fun interpretDate(date: Calendar): String {
-                val weekdayNameFormat = SimpleDateFormat("EEE", Locale.getDefault())
-                val weekday = weekdayNameFormat.format(date.time)
-                val format = SimpleDateFormat("dd/MM", Locale.getDefault())
-
-                return "%s\n%s".format(weekday.toUpperCase(), format.format(date.time))
-            }
+            override fun interpretDate(date: Calendar): String =
+                "${formatToPattern("EEE", date)}\n${formatToPattern("dd/MM", date)}"
         }
     }
 
@@ -96,18 +80,11 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
      * @return The list of [WeekViewDisplayable] of the provided month
      */
     override fun onMonthChange(
-        startDate: Calendar,
-        endDate: Calendar
+        startDate: Calendar, endDate: Calendar
     ): List<WeekViewDisplayable<WeekEventView>> {
-        Log.d(
-            "DEBUG",
-            "Thread: " + Thread.currentThread().id.toString() +
-                    ". WeekView.onMonthChange from ${formatToPattern("dd-MM-yyyy", startDate)}" +
-                    "to ${formatToPattern("dd-MM-yyyy", endDate)}"
-        )
-        val month = startDate.toInstant().atZone(ZoneId.systemDefault())
-        val pair = toYearMonth(month)
-        val buf = sharedViewModel.loadedMonths[pair]
+        logD(Thread.currentThread().id.toInt(), "WeekFragment.onMonthChange", startDate, endDate)
+
+        val buf = sharedViewModel.loadedMonths[toYearMonth(startDate)]
         return buf?.list?.map {
             WeekEventView(it, resources.getColor(R.color.event, null))
         } ?: emptyList()
@@ -119,14 +96,7 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
      * @param endDate A [Calendar] representing the end date of the month
      */
     override fun onLoadMore(startDate: Calendar, endDate: Calendar) {
-        Log.d(
-            "DEBUG",
-            "Thread: " + Thread.currentThread().id.toString() + ". WeekView.onLoadMore from ${formatToPattern(
-                "dd-MM-yyyy",
-                startDate
-            )} " +
-                    "to ${formatToPattern("dd-MM-yyyy", endDate)}"
-        )
+        logD(Thread.currentThread().id.toInt(), "WeekFragment.onLoadMore", startDate, endDate)
 
         val month = toZoneDateTime(startDate)
         val monthStart = month.toLocalDate()
