@@ -11,12 +11,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.alamkanak.weekview.*
+import com.truefinch.enceladus.EnceladusApp
 import com.truefinch.enceladus.R
 import com.truefinch.enceladus.SharedViewModel
 
-import com.truefinch.enceladus.models.EventModel
 import com.truefinch.enceladus.ui.events.WeekEventView
+import com.truefinch.enceladus.utils.DateFormatterUtil.Companion.formatToPattern
 import com.truefinch.enceladus.utils.lazyView
+import com.truefinch.enceladus.utils.toYearMonth
 import java.time.LocalTime
 import java.time.YearMonth
 import java.time.ZoneId
@@ -36,7 +38,14 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
      * @param endDate A [Calendar] representing the end date of the month
      */
     override fun onLoadMore(startDate: Calendar, endDate: Calendar) {
-        Log.d("DEBUG", "WeekView.onLoadMore")
+        Log.d(
+            "DEBUG",
+            "Thread: " + Thread.currentThread().id.toString() + ". WeekView.onLoadMore from ${formatToPattern(
+                "dd-MM-yyyy",
+                startDate
+            )} " +
+                    "to ${formatToPattern("dd-MM-yyyy", endDate)}"
+        )
 
         val month = startDate.toInstant().atZone(ZoneId.systemDefault())
         val monthStart = month.toLocalDate()
@@ -46,7 +55,12 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
             .with(TemporalAdjusters.lastDayOfMonth())
             .atTime(LocalTime.MAX)
             .atZone(month.zone)
-
+        if (sharedViewModel.isLoaded(toYearMonth(month))) {
+            sharedViewModel.loadedMonths[toYearMonth(month)]?.list?.map {
+                WeekEventView(it, resources.getColor(R.color.event, null))
+            }?.let { /*weekView.submit(it) */ }
+            return
+        }
         sharedViewModel.fetchEvents(monthStart, monthEnd)
     }
 
@@ -60,12 +74,17 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
         startDate: Calendar,
         endDate: Calendar
     ): List<WeekViewDisplayable<WeekEventView>> {
-        Log.d("DEBUG", "MonthChange")
+        Log.d(
+            "DEBUG",
+            "Thread: " + Thread.currentThread().id.toString() +
+                    ". WeekView.onMonthChange from ${formatToPattern("dd-MM-yyyy", startDate)}" +
+                    "to ${formatToPattern("dd-MM-yyyy", startDate)}"
+        )
         val month = startDate.toInstant().atZone(ZoneId.systemDefault())
         val pair = YearMonth.of(month.year, month.monthValue)
         val buf = sharedViewModel.loadedMonths[pair]
-        return buf?.map {
-            WeekEventView(it, resources.getColor(R.color.event))
+        return buf?.list?.map {
+            WeekEventView(it, resources.getColor(R.color.event, null))
         } ?: emptyList()
     }
 
@@ -79,39 +98,44 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
+        Log.d(
+            "DEBUG",
+            "Thread: " + Thread.currentThread().id.toString() + ". WeekView.onCreateView"
+        )
         viewModel = ViewModelProviders.of(this).get(WeekViewModel::class.java)
         sharedViewModel = activity?.run {
             ViewModelProviders.of(this)[SharedViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
-        sharedViewModel.lastLoadedMonth.observe(this, Observer {
-            onLoadingSuccess(it)
-        })
-
-//        viewModel.setOnLoadingSuccessListener {
-//            onLoadingSuccess(it)
-//        }
 
         val root = inflater.inflate(R.layout.fragment_week, container, false)
-        val wv = root.findViewById<WeekView<WeekEventView>>(R.id.weekView)
-        wv.onMonthChangeListener = this
-        wv.scrollListener = this
-        wv.scrollListener = this
-        wv.onLoadMoreListener = this
         return root
     }
 
-    @Synchronized
-    private fun onLoadingSuccess(events: List<EventModel>) {
-        if (events.isEmpty())
+    //    @Synchronized
+    private fun onLoadingSuccess(events: SharedViewModel.YearMonthEvents) {
+        if (events.list.isEmpty() /*|| EnceladusApp.instance.tabManager.currentTabId != R.id.navigation_week*/)
             return
-        val a = events.map {
-            WeekEventView(it, resources.getColor(R.color.event))
+        val a = events.list.map {
+            WeekEventView(it, resources.getColor(R.color.event, null))
         }
-        weekView.submit(a)
+        Log.d(
+            "DEBUG",
+            "Thread: " + Thread.currentThread().id.toString() + ". WeekView.onLoadingSuccess for ${formatToPattern(
+                "MM-yyyy",
+                events.yearMonth
+            )}"
+        )
+//        Thread.sleep(2_000)
+//        weekView.submit(a)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        Log.d(
+            "DEBUG",
+            "Thread: " + Thread.currentThread().id.toString() + ". WeekView.onActivityCreated"
+        )
+
         weekView.dateTimeInterpreter = object : DateTimeInterpreter {
             override fun interpretTime(hour: Int): String {
                 return if (hour > 11) (hour - 12).toString() + " PM" else if (hour == 0) "12 M" else "$hour AM"
@@ -129,6 +153,24 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.d(
+            "DEBUG",
+            "Thread: " + Thread.currentThread().id.toString() + ". WeekView.onViewCreated"
+        )
+
+        sharedViewModel.lastLoadedMonth.observe(this, Observer {
+            //            if (weekView.firstVisibleDate == null || !isInRange(weekView.firstVisibleDate!!, it.first))
+            onLoadingSuccess(it)
+        })
+
+        weekView.scrollListener = this
+        weekView.scrollListener = this
+        weekView.onLoadMoreListener = this
+        weekView.onMonthChangeListener = this
+    }
+
     /**
      * Called when the first visible date has changed.
      *
@@ -144,7 +186,6 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
      * @param time A [Calendar] with the date and time of the clicked position
      */
     override fun onEmptyViewLongClick(time: Calendar) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     /**
@@ -153,5 +194,9 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
      * @param time A [Calendar] with the date and time of the clicked position
      */
     override fun onEmptyViewClicked(time: Calendar) {
+    }
+
+    private fun isInRange(calendar: Calendar, yearMonth: YearMonth): Boolean {
+        return calendar.get(Calendar.MONTH) == yearMonth.monthValue
     }
 }

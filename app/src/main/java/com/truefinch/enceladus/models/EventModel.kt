@@ -10,7 +10,7 @@ import java.time.ZonedDateTime
 data class EventModel internal constructor(
     val id: Long,
     val title: String?,
-    private val location: String?,
+    val location: String?,
     val pattern_id: Long,
     var start_date: ZonedDateTime,
     var end_date: ZonedDateTime

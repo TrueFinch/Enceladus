@@ -43,7 +43,7 @@ class TabManager(private val mainActivity: MainActivity) {
         R.id.navigation_day to R.id.dayFragment,
         R.id.navigation_schedule to R.id.scheduleFragment
     )
-    private var currentTabId: Int = R.id.navigation_month
+    var currentTabId: Int = R.id.navigation_month
     private var tabHistory = TabHistory()
 
     private val _navStartController: NavController by lazy {
@@ -124,11 +124,12 @@ class TabManager(private val mainActivity: MainActivity) {
         }
     }
 
-    fun switchTab(tabId: Int, addToTabHistory: Boolean = true) {
+    fun switchTab(tabId: Int, addToTabHistory: Boolean = true, initial: Boolean = false) {
         if (addToTabHistory/* && currentTabId != R.id.navigation_start*/) {
             tabHistory.push(tabId)
         }
         currentTabId = tabId
+        var viewToShow: View = monthTabContainer
         when (tabId) {
             //TODO: maybe we want user to be able to auth during runtime, so we need to provide a way to do this
 //            R.id.navigation_start -> {
@@ -137,24 +138,27 @@ class TabManager(private val mainActivity: MainActivity) {
 //            }
             R.id.navigation_month -> {
                 currentNavController = _navMonthController
-                invisibleTabContainerExcept(monthTabContainer)
+                viewToShow = monthTabContainer
             }
             R.id.navigation_week -> {
                 currentNavController = _navWeekController
-                invisibleTabContainerExcept(weekTabContainer)
+                viewToShow = weekTabContainer
             }
             R.id.navigation_new_event -> {
                 currentNavController = _navNewEventController
-                invisibleTabContainerExcept(newEventTabContainer)
+                viewToShow = newEventTabContainer
             }
             R.id.navigation_day -> {
                 currentNavController = _navDayController
-                invisibleTabContainerExcept(dayTabContainer)
+                viewToShow = dayTabContainer
             }
             R.id.navigation_schedule -> {
                 currentNavController = _navScheduleController
-                invisibleTabContainerExcept(scheduleTabContainer)
+                viewToShow = scheduleTabContainer
             }
+        }
+        if (!initial) {
+            invisibleTabContainerExcept(viewToShow)
         }
     }
 

@@ -31,7 +31,9 @@ class EventMonthDecorator(
     fun setDates(dates: HashSet<ZonedDateTime>) {
         datesWithEvent.clear()
         dates.forEach {
-            datesWithEvent.add(CalendarDay.from(GregorianCalendar.from(it)))
+            datesWithEvent.add(
+                CalendarDay.from(it.year, it.monthValue - 1, it.dayOfMonth)
+            )
         }
     }
 

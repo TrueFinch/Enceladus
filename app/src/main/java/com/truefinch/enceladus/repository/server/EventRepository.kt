@@ -13,8 +13,8 @@ class EventRepository(val api: PlannerApi) : RepositoryInterface {
         startLocal: ZonedDateTime,
         endLocal: ZonedDateTime
     ): Single<List<EventModel>> {
-        val startUTC = toLongUTC(startLocal.withZoneSameInstant(ZoneOffset.UTC))
-        val endUTC = toLongUTC(endLocal.withZoneSameInstant(ZoneOffset.UTC))
+        val startUTC = toLongUTC(startLocal.withZoneSameLocal(ZoneOffset.UTC))
+        val endUTC = toLongUTC(endLocal.withZoneSameLocal(ZoneOffset.UTC))
 
         return api.getEventsInstancesFromTo(startUTC, endUTC)
             .map {
