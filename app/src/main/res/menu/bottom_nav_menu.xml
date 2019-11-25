@@ -15,7 +15,7 @@
         android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/title_week" />
     <item
-        android:id="@+id/navigation_new_event"
+        android:id="@+id/navigation_event"
         android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/title_new_event" />
     <item
