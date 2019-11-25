@@ -16,6 +16,8 @@ class EnceladusApp : Application() {
     lateinit var tabManager: TabManager
     lateinit var server: Server
     lateinit var repository: EventRepository
+    lateinit var sharedViewModel: SharedViewModel
+
 
     override fun onCreate() {
         super.onCreate()

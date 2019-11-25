@@ -1,7 +1,6 @@
 package com.truefinch.enceladus
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -12,16 +11,18 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.truefinch.enceladus.navigation.TabManager
 import com.truefinch.enceladus.ui.auth.AuthViewModel
-import java.util.*
-import com.truefinch.enceladus.repository.server.model.EventRequest
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.truefinch.enceladus.ui.day.DayViewModel
+import com.truefinch.enceladus.ui.eventFragment.EventViewModel
+import com.truefinch.enceladus.ui.month.MonthViewModel
+import com.truefinch.enceladus.ui.schedule.ScheduleViewModel
+import com.truefinch.enceladus.ui.week.WeekViewModel
 import java.time.LocalTime
 import java.time.ZonedDateTime
 import java.time.temporal.TemporalAdjusters
 
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
+    lateinit var navView: BottomNavigationView
 
     private lateinit var tabManager: TabManager
     private lateinit var sharedViewModel: SharedViewModel
@@ -35,12 +36,14 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         EnceladusApp.instance.tabManager = TabManager(this)
         tabManager = EnceladusApp.instance.tabManager
 
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        navView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(this)
 
-        sharedViewModel = this?.run {
-            ViewModelProviders.of(this)[SharedViewModel::class.java]
-        }
+//        sharedViewModel = this.run {
+//            ViewModelProviders.of(this)[SharedViewModel::class.java]
+//        }
+//
+//        EnceladusApp.instance.sharedViewModel = sharedViewModel
 
         if (savedInstanceState == null) {
 //            navView.selectedItemId = R.id.navigation_start
@@ -65,7 +68,19 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun onStart() {
         super.onStart()
-
+        sharedViewModel = run { ViewModelProviders.of(this)[SharedViewModel::class.java] }
+        sharedViewModel.monthViewModel =
+            run { ViewModelProviders.of(this)[MonthViewModel::class.java] }
+        sharedViewModel.weekViewModel =
+            run { ViewModelProviders.of(this)[WeekViewModel::class.java] }
+        sharedViewModel.eventViewModel =
+            run { ViewModelProviders.of(this)[EventViewModel::class.java] }
+        sharedViewModel.dayViewModel =
+            run { ViewModelProviders.of(this)[DayViewModel::class.java] }
+        sharedViewModel.scheduleViewModel =
+            run { ViewModelProviders.of(this)[ScheduleViewModel::class.java] }
+        sharedViewModel.init()
+        EnceladusApp.instance.sharedViewModel = sharedViewModel
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -88,10 +103,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         if (this.firstTime) {
+            firstTime = false
             tabManager.switchTab(R.id.navigation_week, addToTabHistory = false, initial = true)
             tabManager.switchTab(R.id.navigation_day, addToTabHistory = false, initial = true)
             tabManager.switchTab(R.id.navigation_month, addToTabHistory = false, initial = true)
-            tabManager.switchTab(R.id.navigation_new_event, addToTabHistory = false, initial = true)
+            tabManager.switchTab(R.id.navigation_event, addToTabHistory = false, initial = true)
             tabManager.switchTab(R.id.navigation_schedule, addToTabHistory = false, initial = true)
 
 
