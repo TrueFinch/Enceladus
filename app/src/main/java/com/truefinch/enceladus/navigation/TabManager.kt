@@ -6,8 +6,11 @@ import android.view.View
 import androidx.core.view.isInvisible
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.truefinch.enceladus.EnceladusApp
 import com.truefinch.enceladus.MainActivity
 import com.truefinch.enceladus.R
+import com.truefinch.enceladus.models.EventModel
+import com.truefinch.enceladus.utils.EventMode
 import kotlinx.android.synthetic.main.activity_main.*
 
 class TabManager(private val mainActivity: MainActivity) {
@@ -146,6 +149,11 @@ class TabManager(private val mainActivity: MainActivity) {
             R.id.navigation_event -> {
                 currentNavController = _navNewEventController
                 viewToShow = newEventTabContainer
+                EnceladusApp.instance.sharedViewModel.eventViewModel.also {
+                    if (it.eventMode.value == EventMode.NONE) {
+                        it.setEventData(EventModel.emptyEvent(), EventMode.CREATE)
+                    }
+                }
             }
             R.id.navigation_day -> {
                 currentNavController = _navDayController

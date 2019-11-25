@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.LinearLayout
 import com.truefinch.enceladus.R
 import kotlinx.android.synthetic.main.custom_date_time_picker_view.view.*
@@ -42,24 +43,7 @@ class CustomDateTimePickerView : LinearLayout {
         date_time_label.text = a.getString(R.styleable.CustomDateTimePickerView_date_time_label)
         a.recycle()
 
-        date_time_picker.setOnClickListener {
-            val dpd = DatePickerDialog(
-                this.context, R.style.CustomDatePickerDialog,
-                DatePickerDialog.OnDateSetListener { _, year, month, day ->
-                    val tpd = TimePickerDialog(
-                        this.context, R.style.CustomTimePickerDialog,
-                        TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-                            dateTime = ZonedDateTime.of(
-                                LocalDateTime.of(year, month + 1, day, hour, minute),
-                                dateTime.zone
-                            )
-                        }, dateTime.hour, dateTime.minute, false
-                    )
-                    tpd.show()
-                }, dateTime.year, dateTime.monthValue - 1, dateTime.dayOfMonth
-            )
-            dpd.show()
-        }
+        date_time_picker.setOnClickListener(this::onClickListener)
     }
 
 // "eee, dd LLL yyyy, hh:mm a"
@@ -94,11 +78,40 @@ class CustomDateTimePickerView : LinearLayout {
             updateViewDateTime()
         }
 
+    private fun onClickListener(view: View) {
+        if (!isEnabled)
+            return
+        val dpd = DatePickerDialog(
+            this.context, R.style.CustomDatePickerDialog,
+            DatePickerDialog.OnDateSetListener { _, year, month, day ->
+                val tpd = TimePickerDialog(
+                    this.context, R.style.CustomTimePickerDialog,
+                    TimePickerDialog.OnTimeSetListener { _, hour, minute ->
+                        dateTime = ZonedDateTime.of(
+                            LocalDateTime.of(year, month + 1, day, hour, minute),
+                            dateTime.zone
+                        )
+                    }, dateTime.hour, dateTime.minute, false
+                )
+                tpd.show()
+            }, dateTime.year, dateTime.monthValue - 1, dateTime.dayOfMonth
+        )
+        dpd.show()
+    }
+
+//    var enabled: Boolean
+//    get() = _enabled
+//    set(value) {
+//        date_time_picker.setOnClickListener(this::onClickListener)
+//        _enabled = value
+//    }
+
     private lateinit var _dateTime: ZonedDateTime
     private var _pattern: String = "eee, dd LLL yyyy, hh:mm a"
     private var _localPattern: String = "eee, dd LLL yyyy, hh:mm a, O"
 
     private var _dateTimeChangeListener: OnDateTimeChangeListener? = null
+//    private var _enabled: Boolean = true
 
     interface OnDateTimeChangeListener {
         //id -- of dateTimePickerView

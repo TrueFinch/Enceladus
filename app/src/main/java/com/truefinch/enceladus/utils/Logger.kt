@@ -9,6 +9,10 @@ fun logD(threadID: Int, sender: String) {
     log("${getThreadLbl(threadID)} $sender")
 }
 
+fun LogD(threadID: Int, sender: String) {
+    LogD(threadID, sender, "")
+}
+
 fun LogD(threadID: Int, sender: String, message: String) {
     log("${getThreadLbl(threadID)} $sender $message")
 }

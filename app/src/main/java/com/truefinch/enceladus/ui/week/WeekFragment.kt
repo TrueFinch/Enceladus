@@ -152,11 +152,7 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
      * @param eventRect The [RectF] of the [EventChip]
      */
     override fun onEventLongClick(data: WeekEventView, eventRect: RectF) {
-        LogD(
-            Thread.currentThread().id.toInt(),
-            "WeekFragment.onEventLongClick",
-            data.event.title ?: "No title"
-        )
+        LogD(threadId(), "WeekFragment.onEventLongClick", data.event.title ?: "No title")
         viewOrEventClickHandler {
             viewModel.provideEventData(data.event, EventMode.EDIT)
             EnceladusApp.instance.tabManager.switchTab(R.id.navigation_event)
@@ -170,12 +166,11 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
      * @param eventRect The [RectF] of the [EventChip]
      */
     override fun onEventClick(data: WeekEventView, eventRect: RectF) {
-        LogD(
-            Thread.currentThread().id.toInt(),
-            "WeekFragment.onEventClick",
-            data.event.title ?: "No title"
-        )
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        LogD(threadId(), "WeekFragment.onEventClick", data.event.title ?: "No title")
+        viewOrEventClickHandler {
+            viewModel.provideEventData(data.event, EventMode.SHOW)
+            EnceladusApp.instance.tabManager.switchTab(R.id.navigation_event)
+        }
     }
 
     /**

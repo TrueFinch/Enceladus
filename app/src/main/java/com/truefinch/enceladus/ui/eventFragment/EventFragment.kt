@@ -3,6 +3,7 @@ package com.truefinch.enceladus.ui.eventFragment
 
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -18,7 +19,12 @@ import android.view.MenuInflater
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import com.truefinch.enceladus.ui.pickers.RecurrencePickerFragment
+import com.truefinch.enceladus.utils.DateFormatterUtil.Companion.formatToPattern
 import com.truefinch.enceladus.utils.EventMode
+import com.truefinch.enceladus.utils.LogD
+import com.truefinch.enceladus.utils.threadId
+import okhttp3.internal.format
+import org.w3c.dom.Text
 
 class EventFragment : Fragment() {
     companion object {
@@ -71,7 +77,6 @@ class EventFragment : Fragment() {
         val recPicker = recurrencePickerView5
         recPicker.switch_recurrence.setOnClickListener {
             if (switch_recurrence.isChecked) {
-//                EnceladusApp.instance.tabManager.currentNavController!!.navigate(R.id.action_eventFragment_to_recurrencePickerFragment)
                 RecurrencePickerFragment.newInstance().show(fragmentManager!!, "dialog")
             }
         }
@@ -104,19 +109,29 @@ class EventFragment : Fragment() {
         })
 
         tbEventInstance.setNavigationOnClickListener {
+            LogD(threadId(), "EventFragment.goBack", "Drop all data")
             viewModel.eventMode.value = EventMode.NONE
             activity?.onBackPressed()
         }
 
         startDateTimePicker.setOnDateTimeChangeListener { zonedDateTime: ZonedDateTime, id: Int ->
+            LogD(
+                threadId(), "EventFragment.startDateTimePicker",
+                formatToPattern("eee, dd LLL yyyy, hh:mm", zonedDateTime)
+            )
             onDateTimeListener(zonedDateTime, id)
         }
         endDateTimePicker.setOnDateTimeChangeListener { zonedDateTime: ZonedDateTime, id: Int ->
+            LogD(
+                threadId(), "EventFragment.endDateTimePicker",
+                formatToPattern("eee, dd LLL yyyy, hh:mm", zonedDateTime)
+            )
             onDateTimeListener(zonedDateTime, id)
         }
 
         viewModel.loadedData.observe(this, Observer {
             if (it == true) {
+                LogD(threadId(), "EventFragment.loadedDataObserver", "True")
                 etTitle.setText(viewModel.eventTitle.value)
                 etDescription.setText(viewModel.eventDescription.value)
                 etLocation.setText(viewModel.eventLocation.value)
@@ -128,6 +143,7 @@ class EventFragment : Fragment() {
 
         viewModel.eventMode.observe(this, Observer {
             it!!
+            LogD(threadId(), "EventFragment.eventModeObserver", "to mode $it")
             updateToolBar(it)
             when (it) {
                 EventMode.CREATE -> {
@@ -156,6 +172,7 @@ class EventFragment : Fragment() {
     }
 
     private fun setDefault() {
+        LogD(threadId(), "EventFragment.setDefault")
         val selectedDate = sharedViewModel.selectedDateTime
         startDateTimePicker.dateTime = selectedDate
         endDateTimePicker.dateTime = selectedDate.plusHours(1)
@@ -168,17 +185,19 @@ class EventFragment : Fragment() {
     }
 
     private fun disableUI() {
+        LogD(threadId(), "EventFragment.disableUI")
         changeUIState(false)
     }
 
     private fun enableUI() {
+        LogD(threadId(), "EventFragment.enableUI")
         changeUIState(true)
     }
 
     private fun changeUIState(state: Boolean) {
-        etTitle.isEnabled = state
-        etDescription.isEnabled = state
-        etLocation.isEnabled = state
+        etTitle.inputType = if (state) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL
+        etDescription.inputType = if (state) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL
+        etLocation.inputType = if (state) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL
         startDateTimePicker.isEnabled = state
         endDateTimePicker.isEnabled = state
         recurrencePickerView5.isEnabled = state
@@ -188,6 +207,7 @@ class EventFragment : Fragment() {
     private lateinit var toolbar: Toolbar
 
     private fun updateToolBar(mode: EventMode) {
+        LogD(threadId(), "EventFragment.updateToolBar", "to mode $mode")
         tbEventInstance.menu.findItem(R.id.action_submit_event).isEnabled = false
         tbEventInstance.menu.findItem(R.id.action_edit_event).isEnabled = false
         when (mode) {
