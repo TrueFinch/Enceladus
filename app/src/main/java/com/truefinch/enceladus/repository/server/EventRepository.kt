@@ -29,6 +29,7 @@ class EventRepository(val api: PlannerApi) : RepositoryInterface {
                             eventInstanceServer.event_id,
                             eventServer.name,
                             eventServer.location,
+                            eventServer.details,
                             eventInstanceServer.pattern_id,
                             eventInstanceServer.started_at,
                             eventInstanceServer.ended_at
