@@ -1,27 +1,40 @@
 package com.truefinch.enceladus.ui.week
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.truefinch.enceladus.EnceladusApp
+import com.truefinch.enceladus.SharedViewModel
 import com.truefinch.enceladus.models.EventModel
-import java.time.ZonedDateTime
+import com.truefinch.enceladus.utils.EventMode
+import com.truefinch.enceladus.utils.LogD
 
 class WeekViewModel : ViewModel() {
+    fun isUnsavedEventExist(): Boolean {
+        return EnceladusApp.instance.sharedViewModel.isUnsavedEventExist()
+    }
+
+    fun provideEventData(event: EventModel, mode: EventMode) {
+        LogD(
+            Thread.currentThread().id.toInt(),
+            "WeekViewModel.provideEventData",
+            event.title ?: "No title"
+        )
+        viewOrEventClickListener?.onViewOrEventClick(event, mode)
+    }
+
     private val server = EnceladusApp.instance.server
     private val api = EnceladusApp.instance.server.api
     private val repo = EnceladusApp.instance.repository
 
-    private var _loadingSuccessCallback: OnLoadingSuccessCallback? = null
+    var viewOrEventClickListener: OnViewOrEventClickListener? = null
 
-    interface OnLoadingSuccessCallback {
-        fun onLoadingSuccess(events: List<EventModel>)
+    interface OnViewOrEventClickListener {
+        fun onViewOrEventClick(event: EventModel, mode: EventMode)
     }
 
-    fun setOnLoadingSuccessListener(listener: (events: List<EventModel>) -> Unit) {
-        _loadingSuccessCallback = object : OnLoadingSuccessCallback {
-            override fun onLoadingSuccess(events: List<EventModel>) = listener(events)
+    fun setOnViewOrEventClickListener(listener: (event: EventModel, mode: EventMode) -> Unit) {
+        viewOrEventClickListener = object : OnViewOrEventClickListener {
+            override fun onViewOrEventClick(event: EventModel, mode: EventMode) =
+                listener(event, mode)
         }
     }
-
 }

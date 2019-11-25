@@ -1,9 +1,8 @@
-package com.truefinch.enceladus.ui.events
+package com.truefinch.enceladus.ui.custom_views
 
 import com.alamkanak.weekview.WeekViewDisplayable
 import com.alamkanak.weekview.WeekViewEvent
 import com.alamkanak.weekview.WeekView
-import com.truefinch.enceladus.R
 import com.truefinch.enceladus.models.EventModel
 import java.util.*
 

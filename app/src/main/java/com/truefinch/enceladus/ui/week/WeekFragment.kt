@@ -1,19 +1,22 @@
 package com.truefinch.enceladus.ui.week
 
-import android.annotation.SuppressLint
-import android.icu.text.SimpleDateFormat
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import android.app.AlertDialog
+import android.content.DialogInterface
+import android.graphics.RectF
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.alamkanak.weekview.*
+import com.truefinch.enceladus.EnceladusApp
 import com.truefinch.enceladus.R
 import com.truefinch.enceladus.SharedViewModel
-import com.truefinch.enceladus.ui.events.WeekEventView
+import com.truefinch.enceladus.models.EventModel
+import com.truefinch.enceladus.ui.custom_views.WeekEventView
 import com.truefinch.enceladus.utils.*
 import com.truefinch.enceladus.utils.DateFormatterUtil.Companion.formatToPattern
 import java.time.LocalTime
@@ -22,7 +25,8 @@ import java.util.*
 
 
 class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMoreListener,
-    ScrollListener, OnEmptyViewLongClickListener, OnEmptyViewClickListener {
+    ScrollListener, OnEmptyViewLongClickListener, OnEmptyViewClickListener,
+    OnEventLongClickListener<WeekEventView>, OnEventClickListener<WeekEventView> {
     companion object {
         fun newInstance() = WeekFragment()
     }
@@ -34,7 +38,10 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
         super.onCreateView(inflater, container, savedInstanceState)
         logD(Thread.currentThread().id.toInt(), "WeekFragment.onCreateView")
 
-        viewModel = ViewModelProviders.of(this).get(WeekViewModel::class.java)
+        viewModel = activity?.run {
+            ViewModelProviders.of(this)[WeekViewModel::class.java]
+        } ?: throw Exception("Invalid Activity")
+
         sharedViewModel = activity?.run {
             ViewModelProviders.of(this)[SharedViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
@@ -55,6 +62,8 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
         weekView.scrollListener = this
         weekView.onLoadMoreListener = this
         weekView.onMonthChangeListener = this
+        weekView.onEventClickListener = this
+        weekView.onEventLongClickListener = this
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -86,7 +95,10 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
 
         val buf = sharedViewModel.loadedMonths[toYearMonth(startDate)]
         return buf?.list?.map {
-            WeekEventView(it, resources.getColor(R.color.event, null))
+            WeekEventView(
+                it,
+                resources.getColor(R.color.event, null)
+            )
         } ?: emptyList()
     }
 
@@ -118,6 +130,10 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
      * @param time A [Calendar] with the date and time of the clicked position
      */
     override fun onEmptyViewLongClick(time: Calendar) {
+        viewOrEventClickHandler {
+            viewModel.provideEventData(EventModel.emptyEvent(time), EventMode.CREATE)
+            EnceladusApp.instance.tabManager.switchTab(R.id.navigation_event)
+        }
     }
 
     /**
@@ -126,6 +142,40 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
      * @param time A [Calendar] with the date and time of the clicked position
      */
     override fun onEmptyViewClicked(time: Calendar) {
+        //TODO: do smth with that
+    }
+
+    /**
+     * Called when an [EventChip] is long-clicked.
+     *
+     * @param data The [T] object associated with the [EventChip]'s [WeekViewEvent]
+     * @param eventRect The [RectF] of the [EventChip]
+     */
+    override fun onEventLongClick(data: WeekEventView, eventRect: RectF) {
+        LogD(
+            Thread.currentThread().id.toInt(),
+            "WeekFragment.onEventLongClick",
+            data.event.title ?: "No title"
+        )
+        viewOrEventClickHandler {
+            viewModel.provideEventData(data.event, EventMode.EDIT)
+            EnceladusApp.instance.tabManager.switchTab(R.id.navigation_event)
+        }
+    }
+
+    /**
+     * Called when an [EventChip] is clicked.
+     *
+     * @param data The [T] object associated with the [EventChip]'s [WeekViewEvent]
+     * @param eventRect The [RectF] of the [EventChip]
+     */
+    override fun onEventClick(data: WeekEventView, eventRect: RectF) {
+        LogD(
+            Thread.currentThread().id.toInt(),
+            "WeekFragment.onEventClick",
+            data.event.title ?: "No title"
+        )
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     /**
@@ -138,6 +188,7 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
     }
 
     private fun onLoadingSuccess(events: SharedViewModel.YearMonthEvents) {
+        //TODO: replace with custom logger
         Log.d(
             "DEBUG",
             "Thread: " + Thread.currentThread().id.toString() + ". WeekView.onLoadingSuccess for ${formatToPattern(
@@ -146,6 +197,31 @@ class WeekFragment : Fragment(), OnMonthChangeListener<WeekEventView>, OnLoadMor
             )}"
         )
         weekView.notifyDataSetChanged()
+    }
+
+    private fun viewOrEventClickHandler(callback: () -> Unit) {
+        if (viewModel.isUnsavedEventExist()) {
+            showConfirmDialog(
+                DialogInterface.OnClickListener { _, _ -> callback() },
+                DialogInterface.OnClickListener { _, _ -> }
+            )
+        } else {
+            callback()
+        }
+    }
+
+    private fun showConfirmDialog(
+        positiveButtonClickListener: DialogInterface.OnClickListener,
+        negativeButtonClickListener: DialogInterface.OnClickListener
+    ): AlertDialog {
+        return AlertDialog.Builder(this.context)
+            //TODO: move string to resources
+            .setTitle("Unsaved data")
+            .setMessage("Do you really want to drop unsaved event data?")
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setPositiveButton(android.R.string.yes, positiveButtonClickListener)
+            .setNegativeButton(android.R.string.no, negativeButtonClickListener)
+            .show()
     }
 
     private lateinit var viewModel: WeekViewModel

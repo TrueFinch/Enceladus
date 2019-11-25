@@ -1,67 +1,62 @@
 package com.truefinch.enceladus.ui.eventFragment
 
-import android.util.Log
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.truefinch.enceladus.EnceladusApp
-import com.truefinch.enceladus.repository.server.model.EventRequest
-import com.truefinch.enceladus.repository.server.model.PatternRequest
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.truefinch.enceladus.SharedViewModel
+import com.truefinch.enceladus.models.EventModel
+import com.truefinch.enceladus.utils.EventMode
+import com.truefinch.enceladus.utils.LogD
 import java.time.ZonedDateTime
 
 class EventViewModel : ViewModel() {
-    var startDateTime: ZonedDateTime
-        get() = _startDateTime.value!!
-        set(value) {
-            _startDateTime.value = value
+    val server = EnceladusApp.instance.server
+    val api = EnceladusApp.instance.server.api
+
+    val startDateTime = MutableLiveData<ZonedDateTime>()
+    val endDateTime = MutableLiveData<ZonedDateTime>()
+    val eventTitle = MutableLiveData<String>("")
+    val eventDescription = MutableLiveData<String>("")
+    var eventMode = MutableLiveData<EventMode>(EventMode.NONE)
+
+    private var isUnsaved = MediatorLiveData<Boolean>()
+    val loadedData = MutableLiveData<Boolean>(false)
+
+    init {
+        isUnsaved.apply {
+            addSource(startDateTime) { isUnsaved.value = true }
+            addSource(endDateTime) { isUnsaved.value = true }
+            addSource(eventTitle) { isUnsaved.value = true }
+            addSource(eventDescription) { isUnsaved.value = true }
+            addSource(eventMode) { isUnsaved.value = true }
         }
+    }
 
-    var endDateTime: ZonedDateTime
-        get() = _endDateTime.value!!
-        set(value) {
-            _endDateTime.value = value
+    fun setEventData(eventModel: EventModel, mode: EventMode = EventMode.SHOW) {
+        assert(mode == EventMode.NONE) {
+            LogD(
+                Thread.currentThread().id.toInt(), "EventViewModel.setEventData",
+                "FAILED ${eventModel.title ?: "No title"} in $mode mode"
+            )
         }
+        LogD(
+            Thread.currentThread().id.toInt(), "EventViewModel.setEventData",
+            "${eventModel.title ?: "No title"} in $mode mode"
+        )
 
-    var eventTitle: String
-        get() = _eventTitle.value!!
-        set(value) {
-            _eventTitle.value = value
+        eventModel.apply {
+            eventTitle.value = title ?: ""
+            eventDescription.value = description ?: ""
+            startDateTime.value = local_start_date
+            endDateTime.value = local_end_date
         }
-
-    var eventDescription: String
-        get() = _eventDescription.value!!
-        set(value) {
-            _eventDescription.value = value
-        }
-
-    private val _startDateTime by lazy {
-        return@lazy MutableLiveData<ZonedDateTime>()
+        eventMode.value = mode
+        loadedData.value = true
+        //TODO: get pattern by id from server
     }
 
-    private val _endDateTime by lazy {
-        return@lazy MutableLiveData<ZonedDateTime>()
-    }
-
-    private val _eventTitle by lazy {
-        return@lazy MutableLiveData<String>("")
-    }
-
-    private val _eventDescription by lazy {
-        return@lazy MutableLiveData<String>("")
-    }
-
-    public fun clear() {
-        _startDateTime.value = null
-        _endDateTime.value = null
-        _eventTitle.value = null
-        _eventDescription.value = null
-    }
-
-    public fun sendEvent() {
-        val server = EnceladusApp.instance.server
-        val api = EnceladusApp.instance.server.api
-
+    fun sendEvent() {
 //        api.createEvent(EventRequest(eventDescription, null, eventTitle, "mem"))
 //            .observeOn(AndroidSchedulers.mainThread())
 //            .subscribeOn(Schedulers.io())
@@ -72,4 +67,19 @@ class EventViewModel : ViewModel() {
 //            })
 //        api.createPattern()
     }
+
+    fun isUnsavedEventExist(): Boolean {
+        return isUnsaved.value ?: false
+    }
+
+    fun clear() {
+        startDateTime.value = null
+        endDateTime.value = null
+        eventTitle.value = null
+        eventDescription.value = null
+        isUnsaved.value = false
+        loadedData.value = false
+    }
+
+
 }
