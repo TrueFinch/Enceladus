@@ -4,12 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isInvisible
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.truefinch.enceladus.MainActivity
 import com.truefinch.enceladus.R
-import com.truefinch.enceladus.ui.eventFragment.EventFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class TabManager(private val mainActivity: MainActivity) {
@@ -39,7 +37,7 @@ class TabManager(private val mainActivity: MainActivity) {
 //        R.id.navigation_start to R.id.splashFragment,
         R.id.navigation_month to R.id.monthFragment,
         R.id.navigation_week to R.id.weekFragment,
-        R.id.navigation_new_event to R.id.eventFragment,
+        R.id.navigation_event to R.id.eventFragment,
         R.id.navigation_day to R.id.dayFragment,
         R.id.navigation_schedule to R.id.scheduleFragment
     )
@@ -125,6 +123,7 @@ class TabManager(private val mainActivity: MainActivity) {
     }
 
     fun switchTab(tabId: Int, addToTabHistory: Boolean = true, initial: Boolean = false) {
+        mainActivity.navView.menu.findItem(tabId).isChecked = true
         if (addToTabHistory/* && currentTabId != R.id.navigation_start*/) {
             tabHistory.push(tabId)
         }
@@ -144,7 +143,7 @@ class TabManager(private val mainActivity: MainActivity) {
                 currentNavController = _navWeekController
                 viewToShow = weekTabContainer
             }
-            R.id.navigation_new_event -> {
+            R.id.navigation_event -> {
                 currentNavController = _navNewEventController
                 viewToShow = newEventTabContainer
             }
