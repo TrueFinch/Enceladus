@@ -28,6 +28,10 @@
     <string name="description_placeholder">Description</string>
 
     <string name="title_fake_event">...</string>
+    <string name="location_placeholder">Location</string>
+
+    <string name="yes">yes</string>
+    <string name="no">no</string>
 
     <string-array name="recurrence_unit">
         <item>hour</item>
