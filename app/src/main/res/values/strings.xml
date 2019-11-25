@@ -32,6 +32,7 @@
 
     <string name="yes">yes</string>
     <string name="no">no</string>
+    <string name="title_edit_event">Edit event</string>
 
     <string-array name="recurrence_unit">
         <item>hour</item>

@@ -18,6 +18,7 @@ class EventViewModel : ViewModel() {
     val endDateTime = MutableLiveData<ZonedDateTime>()
     val eventTitle = MutableLiveData<String>("")
     val eventDescription = MutableLiveData<String>("")
+    val eventLocation = MutableLiveData<String>("")
     var eventMode = MutableLiveData<EventMode>(EventMode.NONE)
 
     private var isUnsaved = MediatorLiveData<Boolean>()
@@ -29,6 +30,7 @@ class EventViewModel : ViewModel() {
             addSource(endDateTime) { isUnsaved.value = true }
             addSource(eventTitle) { isUnsaved.value = true }
             addSource(eventDescription) { isUnsaved.value = true }
+            addSource(eventLocation) { isUnsaved.value = true }
             addSource(eventMode) { isUnsaved.value = true }
         }
     }
@@ -48,6 +50,7 @@ class EventViewModel : ViewModel() {
         eventModel.apply {
             eventTitle.value = title ?: ""
             eventDescription.value = description ?: ""
+            eventLocation.value = location ?: ""
             startDateTime.value = local_start_date
             endDateTime.value = local_end_date
         }

@@ -15,7 +15,10 @@ import kotlinx.android.synthetic.main.recurrence_picker_view.*
 import kotlinx.android.synthetic.main.recurrence_picker_view.view.*
 import java.time.ZonedDateTime
 import android.view.MenuInflater
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
+import com.truefinch.enceladus.ui.pickers.RecurrencePickerFragment
+import com.truefinch.enceladus.utils.EventMode
 
 class EventFragment : Fragment() {
     companion object {
@@ -64,12 +67,12 @@ class EventFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
 //        setDefault()
         val recPicker = recurrencePickerView5
         recPicker.switch_recurrence.setOnClickListener {
             if (switch_recurrence.isChecked) {
-                EnceladusApp.instance.tabManager.currentNavController!!.navigate(R.id.action_eventFragment_to_recurrencePickerFragment)
+//                EnceladusApp.instance.tabManager.currentNavController!!.navigate(R.id.action_eventFragment_to_recurrencePickerFragment)
+                RecurrencePickerFragment.newInstance().show(fragmentManager!!, "dialog")
             }
         }
 
@@ -101,7 +104,7 @@ class EventFragment : Fragment() {
         })
 
         tbEventInstance.setNavigationOnClickListener {
-            setDefault()
+            viewModel.eventMode.value = EventMode.NONE
             activity?.onBackPressed()
         }
 
@@ -114,6 +117,32 @@ class EventFragment : Fragment() {
 
         viewModel.loadedData.observe(this, Observer {
             if (it == true) {
+                etTitle.setText(viewModel.eventTitle.value)
+                etDescription.setText(viewModel.eventDescription.value)
+                etLocation.setText(viewModel.eventLocation.value)
+                startDateTimePicker.dateTime = viewModel.startDateTime.value!!
+                endDateTimePicker.dateTime = viewModel.endDateTime.value!!
+                //TODO: get recurrence picker value
+            }
+        })
+
+        viewModel.eventMode.observe(this, Observer {
+            it!!
+            updateToolBar(it)
+            when (it) {
+                EventMode.CREATE -> {
+                    enableUI()
+                }
+                EventMode.EDIT -> {
+                    enableUI()
+                }
+                EventMode.SHOW -> {
+                    disableUI()
+                }
+                EventMode.NONE -> {
+                    disableUI()
+                    setDefault()
+                }
             }
         })
     }
@@ -139,20 +168,36 @@ class EventFragment : Fragment() {
     }
 
     private fun disableUI() {
-        etTitle.isEnabled = false
-        etDescription.isEnabled = false
-        etLocation.isEnabled = false
-        startDateTimePicker.isEnabled = false
-        endDateTimePicker.isEnabled = false
-        //TODO: disable recurrence picker
+        changeUIState(false)
     }
 
     private fun enableUI() {
-        etTitle.isEnabled = true
-        etDescription.isEnabled = true
-        etLocation.isEnabled = true
-        startDateTimePicker.isEnabled = true
-        endDateTimePicker.isEnabled = true
+        changeUIState(true)
+    }
+
+    private fun changeUIState(state: Boolean) {
+        etTitle.isEnabled = state
+        etDescription.isEnabled = state
+        etLocation.isEnabled = state
+        startDateTimePicker.isEnabled = state
+        endDateTimePicker.isEnabled = state
+        recurrencePickerView5.isEnabled = state
         //TODO: enable recurrence picker
+    }
+
+    private lateinit var toolbar: Toolbar
+
+    private fun updateToolBar(mode: EventMode) {
+        tbEventInstance.menu.findItem(R.id.action_submit_event).isEnabled = false
+        tbEventInstance.menu.findItem(R.id.action_edit_event).isEnabled = false
+        when (mode) {
+            EventMode.CREATE -> tbEventInstance.menu.findItem(R.id.action_submit_event).isEnabled =
+                true
+            EventMode.EDIT -> tbEventInstance.menu.findItem(R.id.action_submit_event).isEnabled =
+                true
+            EventMode.SHOW -> tbEventInstance.menu.findItem(R.id.action_edit_event).isEnabled = true
+            EventMode.NONE -> {
+            }
+        }
     }
 }

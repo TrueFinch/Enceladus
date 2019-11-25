@@ -6,5 +6,11 @@
         android:orderInCategory="300"
         android:title="@string/title_new_event"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_edit_event"
+        android:orderInCategory="300"
+        android:title="@string/title_edit_event"
+        android:icon="@drawable/common_full_open_on_phone"
+        app:showAsAction="ifRoom" />
 </menu>

@@ -15,7 +15,9 @@ import java.time.DayOfWeek
 import java.util.*
 
 class RecurrencePickerFragment : DialogFragment(), AdapterView.OnItemSelectedListener {
-
+    companion object {
+        fun newInstance() = RecurrencePickerFragment()
+    }
 
     internal var currentRecType: RecurrenceType
         get() = _currentRecType
