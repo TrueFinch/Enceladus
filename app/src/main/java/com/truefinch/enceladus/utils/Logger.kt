@@ -6,7 +6,11 @@ import java.time.ZonedDateTime
 import java.util.*
 
 fun logD(threadID: Int, sender: String) {
-    log("${getThreadLbl(threadID)} $sender ")
+    log("${getThreadLbl(threadID)} $sender")
+}
+
+fun LogD(threadID: Int, sender: String, message: String) {
+    log("${getThreadLbl(threadID)} $sender $message")
 }
 
 fun logD(threadID: Int, sender: String, to: ZonedDateTime) {
