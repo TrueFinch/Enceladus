@@ -29,41 +29,13 @@ import org.w3c.dom.Text
 class EventFragment : Fragment() {
     companion object {
         fun newInstance() = EventFragment()
+        private val name: String = "EventFragment"
+        private val pattern: String = "eee, dd LLL yyyy, hh:mm"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-    }
-
-    private val viewModel: EventViewModel by lazy {
-        activity?.run {
-            ViewModelProviders.of(this)[EventViewModel::class.java]
-        } ?: throw Exception("Invalid Activity")
-    }
-
-    private val sharedViewModel: SharedViewModel by lazy {
-        activity?.run {
-            ViewModelProviders.of(this)[SharedViewModel::class.java]
-        } ?: throw Exception("Invalid Activity")
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            (R.id.action_submit_event) -> {
-                viewModel.sendEvent()
-                exitEventFragment()
-            }
-            (R.id.action_edit_event) -> {
-                viewModel.eventMode.value = EventMode.EDIT
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_event_create, menu)
-        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onCreateView(
@@ -73,9 +45,14 @@ class EventFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_event, container, false)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_event_create, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-//        setDefault()
+
         val recPicker = recurrencePickerView5
         recPicker.switch_recurrence.setOnClickListener {
             if (switch_recurrence.isChecked) {
@@ -105,35 +82,27 @@ class EventFragment : Fragment() {
 
         etLocation.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                viewModel.eventDescription.value = s.toString()
+                viewModel.eventLocation.value = s.toString()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        tbEventInstance.setNavigationOnClickListener {
-            exitEventFragment()
-        }
+        tbEventInstance.setNavigationOnClickListener { exitEventFragment() }
 
         startDateTimePicker.setOnDateTimeChangeListener { zonedDateTime: ZonedDateTime, id: Int ->
-            LogD(
-                threadId(), "EventFragment.startDateTimePicker",
-                formatToPattern("eee, dd LLL yyyy, hh:mm", zonedDateTime)
-            )
+            LogD(threadId(), "$name.startDateTimePicker", formatToPattern(pattern, zonedDateTime))
             onDateTimeListener(zonedDateTime, id)
         }
         endDateTimePicker.setOnDateTimeChangeListener { zonedDateTime: ZonedDateTime, id: Int ->
-            LogD(
-                threadId(), "EventFragment.endDateTimePicker",
-                formatToPattern("eee, dd LLL yyyy, hh:mm", zonedDateTime)
-            )
+            LogD(threadId(), "$name.endDateTimePicker", formatToPattern(pattern, zonedDateTime))
             onDateTimeListener(zonedDateTime, id)
         }
 
         viewModel.loadedData.observe(this, Observer {
             if (it == true) {
-                LogD(threadId(), "EventFragment.loadedDataObserver", "True")
+                LogD(threadId(), "$name.loadedDataObserver", "True")
                 etTitle.setText(viewModel.eventTitle.value)
                 etDescription.setText(viewModel.eventDescription.value)
                 etLocation.setText(viewModel.eventLocation.value)
@@ -145,7 +114,7 @@ class EventFragment : Fragment() {
 
         viewModel.eventMode.observe(this, Observer {
             it!!
-            LogD(threadId(), "EventFragment.eventModeObserver", "to mode $it")
+            LogD(threadId(), "$name.eventModeObserver", "to mode $it")
             updateToolBar(it)
             when (it) {
                 EventMode.CREATE -> enableUI()
@@ -159,6 +128,19 @@ class EventFragment : Fragment() {
         })
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            (R.id.action_submit_event) -> {
+                viewModel.sendEvent()
+                exitEventFragment()
+            }
+            (R.id.action_edit_event) -> {
+                viewModel.eventMode.value = EventMode.EDIT
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun onDateTimeListener(zonedDateTime: ZonedDateTime, id: Int) {
         if (id == R.id.startDateTimePicker) {
             viewModel.startDateTime.value = zonedDateTime
@@ -168,7 +150,7 @@ class EventFragment : Fragment() {
     }
 
     private fun setDefault() {
-        LogD(threadId(), "EventFragment.setDefault")
+        LogD(threadId(), "$name.setDefault")
         val selectedDate = sharedViewModel.selectedDateTime
         startDateTimePicker.dateTime = selectedDate
         endDateTimePicker.dateTime = selectedDate.plusHours(1)
@@ -181,12 +163,12 @@ class EventFragment : Fragment() {
     }
 
     private fun disableUI() {
-        LogD(threadId(), "EventFragment.disableUI")
+        LogD(threadId(), "$name.disableUI")
         changeUIState(false)
     }
 
     private fun enableUI() {
-        LogD(threadId(), "EventFragment.enableUI")
+        LogD(threadId(), "$name.enableUI")
         changeUIState(true)
     }
 
@@ -200,10 +182,8 @@ class EventFragment : Fragment() {
         //TODO: enable recurrence picker
     }
 
-    private lateinit var toolbar: Toolbar
-
     private fun updateToolBar(mode: EventMode) {
-        LogD(threadId(), "EventFragment.updateToolBar", "to mode $mode")
+        LogD(threadId(), "$name.updateToolBar", "to mode $mode")
         tbEventInstance.menu.findItem(R.id.action_submit_event).isVisible = false
         tbEventInstance.menu.findItem(R.id.action_edit_event).isVisible = false
         when (mode) {
@@ -216,8 +196,22 @@ class EventFragment : Fragment() {
     }
 
     private fun exitEventFragment() {
-        LogD(threadId(), "EventFragment.goBack", "Drop all data")
+        LogD(threadId(), "$name.goBack", "Drop all data")
         viewModel.eventMode.value = EventMode.NONE
         activity?.onBackPressed()
+    }
+
+    private lateinit var toolbar: Toolbar
+
+    private val viewModel: EventViewModel by lazy {
+        activity?.run {
+            ViewModelProviders.of(this)[EventViewModel::class.java]
+        } ?: throw Exception("Invalid Activity")
+    }
+
+    private val sharedViewModel: SharedViewModel by lazy {
+        activity?.run {
+            ViewModelProviders.of(this)[SharedViewModel::class.java]
+        } ?: throw Exception("Invalid Activity")
     }
 }
