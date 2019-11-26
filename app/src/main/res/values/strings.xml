@@ -35,7 +35,6 @@
     <string name="title_edit_event">Edit event</string>
 
     <string-array name="recurrence_unit">
-        <item>hour</item>
         <item>day</item>
         <item>week</item>
         <item>month</item>
@@ -43,7 +42,6 @@
     </string-array>
 
     <string-array name="recurrence_units">
-        <item>hours</item>
         <item>days</item>
         <item>weeks</item>
         <item>months</item>
@@ -51,7 +49,6 @@
     </string-array>
 
     <string-array name="recurrence_type_items">
-        <item>Hourly</item>
         <item>Daily</item>
         <item>Weekly</item>
         <item>Monthly</item>

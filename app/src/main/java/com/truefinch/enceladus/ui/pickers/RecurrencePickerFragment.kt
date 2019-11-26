@@ -10,9 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.truefinch.enceladus.R
 import kotlinx.android.synthetic.main.fragment_recurrence_picker.*
-import java.sql.Time
 import java.time.DayOfWeek
-import java.util.*
 
 class RecurrencePickerFragment : DialogFragment(), AdapterView.OnItemSelectedListener {
     companion object {
@@ -26,7 +24,7 @@ class RecurrencePickerFragment : DialogFragment(), AdapterView.OnItemSelectedLis
         }
 
     internal enum class RecurrenceType {
-        HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY
+        DAILY, WEEKLY, MONTHLY, YEARLY
     }
 
     override fun onCreateView(
@@ -34,9 +32,7 @@ class RecurrencePickerFragment : DialogFragment(), AdapterView.OnItemSelectedLis
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_recurrence_picker, container, false)
-
-        return view
+        return inflater.inflate(R.layout.fragment_recurrence_picker, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -83,8 +79,6 @@ class RecurrencePickerFragment : DialogFragment(), AdapterView.OnItemSelectedLis
         lytDaysOfWeek2.isEnabled = false
 
         when (currentRecType) {
-            RecurrenceType.HOURLY -> {
-            }
             RecurrenceType.DAILY -> {
             }
             RecurrenceType.WEEKLY -> {
@@ -117,7 +111,6 @@ class RecurrencePickerFragment : DialogFragment(), AdapterView.OnItemSelectedLis
 
     private val recTypeToOption by lazy {
         hashMapOf(
-            RecurrenceType.HOURLY to recurrenceOption[0]!!,
             RecurrenceType.DAILY to recurrenceOption[1]!!,
             RecurrenceType.WEEKLY to recurrenceOption[2]!!,
             RecurrenceType.MONTHLY to recurrenceOption[3]!!,
@@ -127,7 +120,6 @@ class RecurrencePickerFragment : DialogFragment(), AdapterView.OnItemSelectedLis
 
     private val recTypeToUnit by lazy {
         hashMapOf(
-            RecurrenceType.HOURLY to recurrenceUnit[0]!!,
             RecurrenceType.DAILY to recurrenceUnit[1]!!,
             RecurrenceType.WEEKLY to recurrenceUnit[2]!!,
             RecurrenceType.MONTHLY to recurrenceUnit[3]!!,
@@ -137,7 +129,6 @@ class RecurrencePickerFragment : DialogFragment(), AdapterView.OnItemSelectedLis
 
     private val recTypeToUnits by lazy {
         hashMapOf(
-            RecurrenceType.HOURLY to recurrenceUnits[0]!!,
             RecurrenceType.DAILY to recurrenceUnits[1]!!,
             RecurrenceType.WEEKLY to recurrenceUnits[2]!!,
             RecurrenceType.MONTHLY to recurrenceUnits[3]!!,
@@ -147,7 +138,6 @@ class RecurrencePickerFragment : DialogFragment(), AdapterView.OnItemSelectedLis
 
     private val optionToRecType by lazy {
         hashMapOf(
-            recurrenceOption[0]!! to RecurrenceType.HOURLY,
             recurrenceOption[1]!! to RecurrenceType.DAILY,
             recurrenceOption[2]!! to RecurrenceType.WEEKLY,
             recurrenceOption[3]!! to RecurrenceType.MONTHLY,
@@ -189,7 +179,7 @@ class RecurrencePickerFragment : DialogFragment(), AdapterView.OnItemSelectedLis
         )
     }
 
-    private var _currentRecType: RecurrenceType = RecurrenceType.HOURLY
+    private var _currentRecType: RecurrenceType = RecurrenceType.DAILY
 
     private val defaultInterval: Int = 1
 
