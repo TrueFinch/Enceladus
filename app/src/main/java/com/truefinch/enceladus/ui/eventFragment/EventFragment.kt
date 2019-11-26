@@ -49,12 +49,14 @@ class EventFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        if (id == R.id.action_submit_event) {
-            viewModel.apply {
-                //TODO: implement send event to the server
+        when (item.itemId) {
+            (R.id.action_submit_event) -> {
+                viewModel.sendEvent()
+                exitEventFragment()
             }
-            return true
+            (R.id.action_edit_event) -> {
+                viewModel.eventMode.value = EventMode.EDIT
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -80,6 +82,8 @@ class EventFragment : Fragment() {
                 RecurrencePickerFragment.newInstance().show(fragmentManager!!, "dialog")
             }
         }
+
+        toolbar = tbEventInstance
 
         etTitle.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -109,9 +113,7 @@ class EventFragment : Fragment() {
         })
 
         tbEventInstance.setNavigationOnClickListener {
-            LogD(threadId(), "EventFragment.goBack", "Drop all data")
-            viewModel.eventMode.value = EventMode.NONE
-            activity?.onBackPressed()
+            exitEventFragment()
         }
 
         startDateTimePicker.setOnDateTimeChangeListener { zonedDateTime: ZonedDateTime, id: Int ->
@@ -146,15 +148,9 @@ class EventFragment : Fragment() {
             LogD(threadId(), "EventFragment.eventModeObserver", "to mode $it")
             updateToolBar(it)
             when (it) {
-                EventMode.CREATE -> {
-                    enableUI()
-                }
-                EventMode.EDIT -> {
-                    enableUI()
-                }
-                EventMode.SHOW -> {
-                    disableUI()
-                }
+                EventMode.CREATE -> enableUI()
+                EventMode.EDIT -> enableUI()
+                EventMode.SHOW -> disableUI()
                 EventMode.NONE -> {
                     disableUI()
                     setDefault()
@@ -200,7 +196,7 @@ class EventFragment : Fragment() {
         etLocation.inputType = if (state) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL
         startDateTimePicker.isEnabled = state
         endDateTimePicker.isEnabled = state
-        recurrencePickerView5.isEnabled = state
+        recurrencePickerView5.switch_recurrence.isEnabled = state
         //TODO: enable recurrence picker
     }
 
@@ -208,16 +204,20 @@ class EventFragment : Fragment() {
 
     private fun updateToolBar(mode: EventMode) {
         LogD(threadId(), "EventFragment.updateToolBar", "to mode $mode")
-        tbEventInstance.menu.findItem(R.id.action_submit_event).isEnabled = false
-        tbEventInstance.menu.findItem(R.id.action_edit_event).isEnabled = false
+        tbEventInstance.menu.findItem(R.id.action_submit_event).isVisible = false
+        tbEventInstance.menu.findItem(R.id.action_edit_event).isVisible = false
         when (mode) {
-            EventMode.CREATE -> tbEventInstance.menu.findItem(R.id.action_submit_event).isEnabled =
-                true
-            EventMode.EDIT -> tbEventInstance.menu.findItem(R.id.action_submit_event).isEnabled =
-                true
-            EventMode.SHOW -> tbEventInstance.menu.findItem(R.id.action_edit_event).isEnabled = true
+            EventMode.CREATE -> toolbar.menu.findItem(R.id.action_submit_event).isVisible = true
+            EventMode.EDIT -> toolbar.menu.findItem(R.id.action_submit_event).isVisible = true
+            EventMode.SHOW -> toolbar.menu.findItem(R.id.action_edit_event).isVisible = true
             EventMode.NONE -> {
             }
         }
+    }
+
+    private fun exitEventFragment() {
+        LogD(threadId(), "EventFragment.goBack", "Drop all data")
+        viewModel.eventMode.value = EventMode.NONE
+        activity?.onBackPressed()
     }
 }

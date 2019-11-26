@@ -14,6 +14,7 @@ class EventViewModel : ViewModel() {
     val server = EnceladusApp.instance.server
     val api = EnceladusApp.instance.server.api
 
+    val eventId = MutableLiveData<Long>(-1)
     val startDateTime = MutableLiveData<ZonedDateTime>()
     val endDateTime = MutableLiveData<ZonedDateTime>()
     val eventTitle = MutableLiveData<String>("")
@@ -48,6 +49,7 @@ class EventViewModel : ViewModel() {
         )
 
         eventModel.apply {
+            eventId.value = id
             eventTitle.value = title ?: ""
             eventDescription.value = description ?: ""
             eventLocation.value = location ?: ""
@@ -76,6 +78,7 @@ class EventViewModel : ViewModel() {
     }
 
     fun clear() {
+        eventId.value = null
         startDateTime.value = null
         endDateTime.value = null
         eventTitle.value = null

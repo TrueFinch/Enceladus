@@ -14,9 +14,8 @@
         android:background="@color/colorPrimary"
         android:theme="@android:style/ThemeOverlay.Material"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="?attr/homeAsUpIndicator"
-        app:menu="@menu/menu_event_create">
-    </androidx.appcompat.widget.Toolbar>
+        app:menu="@menu/menu_event_create"
+        app:navigationIcon="?attr/homeAsUpIndicator" />
 
     <LinearLayout
         android:id="@+id/lytEvent"
@@ -29,6 +28,71 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tbEventInstance">
+
+        <LinearLayout
+            android:id="@+id/lytFastRrule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/fragmentEventButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_home_black_24dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="One time"
+                android:textSize="12sp" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/fragmentEventButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_home_black_24dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="Custom"
+                android:textSize="12sp" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/fragmentEventButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_home_black_24dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="Every week"
+                android:textSize="12sp" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/fragmentEventButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_home_black_24dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="Every two weeks"
+                android:textSize="12sp" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/etTitle"

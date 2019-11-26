@@ -41,4 +41,8 @@
         <item name="android:layout_marginLeft">10dp</item>
     </style>
 
+    <style name="fragmentEventButton" parent="Theme.MaterialComponents.Light">
+        <item name="android:backgroundTint">@color/colorWhite</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
 </resources>
