@@ -39,6 +39,7 @@
 
             <com.google.android.material.button.MaterialButton
                 style="@style/fragmentEventButton"
+                android:id="@+id/btnOneTimeRrule"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="5dp"
@@ -53,6 +54,7 @@
 
             <com.google.android.material.button.MaterialButton
                 style="@style/fragmentEventButton"
+                android:id="@+id/btnCustomRrule"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="5dp"
@@ -67,6 +69,7 @@
 
             <com.google.android.material.button.MaterialButton
                 style="@style/fragmentEventButton"
+                android:id="@+id/btnWeekRrule"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="5dp"
@@ -81,6 +84,7 @@
 
             <com.google.android.material.button.MaterialButton
                 style="@style/fragmentEventButton"
+                android:id="@+id/btnTwoWeekRrule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="5dp"
@@ -120,7 +124,7 @@
         </com.truefinch.enceladus.ui.custom_views.CustomDateTimePickerView>
 
         <com.truefinch.enceladus.ui.custom_views.RecurrencePickerView
-            android:id="@+id/recurrencePickerView5"
+            android:id="@+id/recurrencePickerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

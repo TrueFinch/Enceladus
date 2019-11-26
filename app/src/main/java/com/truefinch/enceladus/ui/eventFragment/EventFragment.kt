@@ -8,7 +8,6 @@ import android.text.TextWatcher
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import com.truefinch.enceladus.EnceladusApp
 import com.truefinch.enceladus.R
 import com.truefinch.enceladus.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_event.*
@@ -17,14 +16,15 @@ import kotlinx.android.synthetic.main.recurrence_picker_view.view.*
 import java.time.ZonedDateTime
 import android.view.MenuInflater
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import com.google.android.material.button.MaterialButton
 import com.truefinch.enceladus.ui.pickers.RecurrencePickerFragment
 import com.truefinch.enceladus.utils.DateFormatterUtil.Companion.formatToPattern
 import com.truefinch.enceladus.utils.EventMode
 import com.truefinch.enceladus.utils.LogD
 import com.truefinch.enceladus.utils.threadId
-import okhttp3.internal.format
-import org.w3c.dom.Text
 
 class EventFragment : Fragment() {
     companion object {
@@ -53,7 +53,8 @@ class EventFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val recPicker = recurrencePickerView5
+        setDefault()
+        val recPicker = recurrencePickerView
         recPicker.switch_recurrence.setOnClickListener {
             if (switch_recurrence.isChecked) {
                 RecurrencePickerFragment.newInstance().show(fragmentManager!!, "dialog")
@@ -126,6 +127,19 @@ class EventFragment : Fragment() {
                 }
             }
         })
+
+        RruleBtns.map { btn: MaterialButton ->
+            btn.setOnClickListener { view: View? ->
+                RruleBtns.map { btn: MaterialButton ->
+                    btn.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorWhite))
+                }
+                btn.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorPrimaryLight))
+                recurrencePickerView.switch_recurrence.isEnabled = false
+                if (btn.id == R.id.btnCustomRrule) {
+                    recurrencePickerView.switch_recurrence.isEnabled = true
+                }
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -154,11 +168,20 @@ class EventFragment : Fragment() {
         val selectedDate = sharedViewModel.selectedDateTime
         startDateTimePicker.dateTime = selectedDate
         endDateTimePicker.dateTime = selectedDate.plusHours(1)
-        val recPicker = recurrencePickerView5
+        val recPicker = recurrencePickerView
         recPicker.dateTime = selectedDate
         recPicker.switch_recurrence.isChecked = false
         etTitle.setText("")
         etDescription.setText("")
+        RruleBtns.map {
+            it.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorWhite))
+        }
+        RruleBtns[0].setBackgroundColor(
+            ContextCompat.getColor(
+                context!!,
+                R.color.colorPrimaryLight
+            )
+        )
         viewModel.clear()
     }
 
@@ -178,7 +201,8 @@ class EventFragment : Fragment() {
         etLocation.inputType = if (state) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL
         startDateTimePicker.isEnabled = state
         endDateTimePicker.isEnabled = state
-        recurrencePickerView5.switch_recurrence.isEnabled = state
+        recurrencePickerView.switch_recurrence.isEnabled = state
+        lytFastRrule.isVisible = state
         //TODO: enable recurrence picker
     }
 
@@ -199,6 +223,10 @@ class EventFragment : Fragment() {
         LogD(threadId(), "$name.goBack", "Drop all data")
         viewModel.eventMode.value = EventMode.NONE
         activity?.onBackPressed()
+    }
+
+    private val RruleBtns by lazy {
+        listOf(btnOneTimeRrule, btnCustomRrule, btnWeekRrule, btnTwoWeekRrule)
     }
 
     private lateinit var toolbar: Toolbar
